@@ -1,0 +1,14 @@
+{
+    "cSpell.words": [
+        "cliv",
+        "fatih",
+        "myapps",
+        "rodaine",
+        "urfave"
+    ],
+    "gopls": {
+        "analyses": {
+            "printf": false
+        }
+    }
+}
