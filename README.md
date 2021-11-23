@@ -1,5 +1,3 @@
-
-
 # MyApps
 
 **MyApps** is a universal command line tool for managing manually installed applications.
@@ -9,6 +7,9 @@
 > I wrote this tool over two long nights while preparing my reports and studying for college. I don't have the strength or time to write nice documentation. Just check the built-in help.
 > 
 > _Linter, linter of the Go, code's not prettiest of them all._
+
+[![asciicast](https://asciinema.org/a/451017.svg)](https://asciinema.org/a/451017)
+
 
 ## Installation
 
