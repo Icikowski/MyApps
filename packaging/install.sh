@@ -42,7 +42,7 @@ contents: []
   #   newest_version_check:
   #     - some_commands
   #     - some_other_commands
-  #   latest_version_check:
+  #   current_version_check:
   #     - some_commands
   #     - some_other_commands
 
