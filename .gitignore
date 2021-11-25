@@ -47,3 +47,4 @@
 **/myapps
 *.tgz
 *.yaml
+!repositories/*.yaml
