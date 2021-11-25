@@ -5,7 +5,7 @@ all: build-static package
 
 clean:
 	rm -f packaging/myapps application/myapps
-	rm myapps.tgz
+	rm -f myapps.tgz
 	(cd application; go clean -cache)
 
 build: clean
