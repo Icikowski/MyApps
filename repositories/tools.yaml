@@ -1,0 +1,35 @@
+name: tools
+description: Handy tools for everyday work
+maintainer: Piotr Icikowski
+contents:
+  - name: bat
+    description: A cat(1) clone with syntax highlighting and Git integration
+    newest_version_check:
+      - curl -Ls -o /dev/null -X HEAD "https://github.com/sharkdp/bat/releases/latest" -w %{url_effective} | sed 's#.*/##; s/v//'
+    current_version_check:
+      - bat --version | sed 's/bat //'
+    install_scenario:
+      - rm -rf /tmp/bat-install
+      - mkdir /tmp/bat-install
+      - wget -q -O /tmp/bat-install/bat.tgz "https://github.com/sharkdp/bat/releases/download/v${LATEST_VERSION}/bat-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+      - (cd /tmp/bat-install; tar -xzf bat.tgz --strip-components=1)
+      - cp /tmp/bat-install/bat /usr/local/bin/bat
+      - chmod a+x /usr/local/bin/bat
+      - cp /tmp/bat-install/autocomplete/bat.bash /etc/bash_completion.d/bat
+      - chmod a+x /etc/bash_completion.d/bat
+      - rm -rf /tmp/bat-install
+    update_scenario:
+      - rm -rf /usr/local/bin/bat
+      - rm -rf /etc/bash_completion.d/bat
+      - rm -rf /tmp/bat-install
+      - mkdir /tmp/bat-install
+      - wget -q -O /tmp/bat-install/bat.tgz "https://github.com/sharkdp/bat/releases/download/v${LATEST_VERSION}/bat-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+      - (cd /tmp/bat-install; tar -xzf bat.tgz --strip-components=1)
+      - cp /tmp/bat-install/bat /usr/local/bin/bat
+      - chmod a+x /usr/local/bin/bat
+      - cp /tmp/bat-install/autocomplete/bat.bash /etc/bash_completion.d/bat
+      - chmod a+x /etc/bash_completion.d/bat
+      - rm -rf /tmp/bat-install
+    uninstall_scenario:
+      - rm -rf /usr/local/bin/bat
+      - rm -rf /etc/bash_completion.d/bat

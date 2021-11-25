@@ -1,0 +1,66 @@
+name: k8s
+description: Kubernetes-related tools
+maintainer: Piotr Icikowski
+contents:
+  - name: helm
+    description: The Kubernetes Package Manager
+    newest_version_check:
+      - curl -Ls -o /dev/null -X HEAD "https://github.com/helm/helm/releases/latest" -w %{url_effective} | sed 's#.*/##; s/v//'
+    current_version_check:
+      - helm version --short | awk -F'+' '{ print $1 }' | sed 's/v//'
+    install_scenario:
+      - rm -rf /tmp/helm-install
+      - mkdir /tmp/helm-install
+      - wget -q -O /tmp/helm-install/helm.tgz "https://get.helm.sh/helm-v${LATEST_VERSION}-linux-amd64.tar.gz"
+      - (cd /tmp/helm-install; tar -xzf helm.tgz --strip-components=1)
+      - cp /tmp/helm-install/helm /usr/local/bin/helm
+      - chmod a+x /usr/local/bin/helm
+      - helm completion bash >/etc/bash_completion.d/helm
+      - chmod a+x /etc/bash_completion.d/helm
+      - rm -rf /tmp/helm-install
+    update_scenario:
+      - rm -rf /usr/local/bin/helm
+      - rm -rf /etc/bash_completion.d/helm
+      - rm -rf /tmp/helm-install
+      - mkdir /tmp/helm-install
+      - wget -q -O /tmp/helm-install/helm.tgz "https://get.helm.sh/helm-v${LATEST_VERSION}-linux-amd64.tar.gz"
+      - (cd /tmp/helm-install; tar -xzf helm.tgz --strip-components=1)
+      - cp /tmp/helm-install/helm /usr/local/bin/helm
+      - chmod a+x /usr/local/bin/helm
+      - helm completion bash >/etc/bash_completion.d/helm
+      - chmod a+x /etc/bash_completion.d/helm
+      - rm -rf /tmp/helm-install
+    uninstall_scenario:
+      - rm -rf /usr/local/bin/helm
+      - rm -rf /etc/bash_completion.d/
+  - name: stern
+    description: Multi pod and container log tailing for Kubernetes
+    newest_version_check:
+      - curl -Ls -o /dev/null -X HEAD "https://github.com/stern/stern/releases/latest" -w %{url_effective} | sed 's#.*/##; s/v//'
+    current_version_check:
+      - "stern -v | head -n 1 | sed 's/version: //'"
+    install_scenario:
+      - rm -rf /tmp/stern-install
+      - mkdir /tmp/stern-install
+      - wget -q -O /tmp/stern-install/stern.tgz "https://github.com/stern/stern/releases/download/v${LATEST_VERSION}/stern_${LATEST_VERSION}_linux_amd64.tar.gz"
+      - (cd /tmp/stern-install; tar -xzf stern.tgz --strip-components=1)
+      - cp /tmp/stern-install/stern /usr/local/bin/stern
+      - chmod a+x /usr/local/bin/stern
+      - stern --completion=bash >/etc/bash_completion.d/stern
+      - chmod a+x /etc/bash_completion.d/stern
+      - rm -rf /tmp/stern-install
+    update_scenario:
+      - rm -rf /usr/local/bin/stern
+      - rm -rf /etc/bash_completion.d/stern
+      - rm -rm /tmp/stern-install
+      - mkdir /tmp/stern-install
+      - wget -q -O /tmp/stern-install/stern.tgz "https://github.com/stern/stern/releases/download/v${LATEST_VERSION}/stern_${LATEST_VERSION}_linux_amd64.tar.gz"
+      - (cd /tmp/stern-install; tar -xzf stern.tgz --strip-components=1)
+      - cp /tmp/stern-install/stern /usr/local/bin/stern
+      - chmod a+x /usr/local/bin/stern
+      - stern --completion=bash >/etc/bash_completion.d/stern
+      - chmod a+x /etc/bash_completion.d/stern
+      - rm -rf /tmp/stern-install
+    uninstall_scenario:
+      - rm -rf /usr/local/bin/stern
+      - rm -rf /etc/bash_completion.d/stern
