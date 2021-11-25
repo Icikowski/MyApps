@@ -71,11 +71,13 @@ func search(ctx *cliv2.Context) error {
 			}
 
 			for _, appName := range args.Slice() {
-				if app, ok := repo.Contents.FindByName(appName); ok {
-					foundApps = append(foundApps, applicationWrapper{
-						application: app,
-						repoName:    repo.Name,
-					})
+				if apps, ok := repo.Contents.FindByNameLike(appName); ok {
+					for _, app := range apps {
+						foundApps = append(foundApps, applicationWrapper{
+							application: app,
+							repoName:    repo.Name,
+						})
+					}
 				}
 			}
 		}

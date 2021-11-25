@@ -153,3 +153,14 @@ func (apps Applications) FindByName(name string) (Application, bool) {
 	}
 	return Application{}, false
 }
+
+// FindByNameLike returns the applications which name contains given name.
+func (apps Applications) FindByNameLike(name string) (Applications, bool) {
+	var result Applications
+	for _, app := range apps {
+		if strings.Contains(app.Name, name) {
+			result = append(result, app)
+		}
+	}
+	return result, len(result) != 0
+}
