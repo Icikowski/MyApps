@@ -97,6 +97,15 @@ func removeRepos(ctx *cliv2.Context) error {
 
 	fmt.Println("Processing", color.New(color.FgHiWhite, color.Bold).Sprint(args.Len()), "repo(s)...")
 
+	deployments := config.GetDeployments()
+
+	usedRepos := map[string]struct{}{}
+	for _, deployment := range deployments {
+		if _, ok := usedRepos[deployment.Repository]; !ok {
+			usedRepos[deployment.Repository] = struct{}{}
+		}
+	}
+
 	repos := config.GetRepositories()
 	errOcurred := false
 	for _, repoName := range args.Slice() {
@@ -109,6 +118,12 @@ func removeRepos(ctx *cliv2.Context) error {
 
 		if repo.Name == config.GetConfiguration().DefaultRepository {
 			printErrorWhileMsg("removing repository", repoName, errors.New("cannot remove default repository"))
+			errOcurred = true
+			continue
+		}
+
+		if _, ok := usedRepos[repo.Name]; ok {
+			printErrorWhileMsg("removing repository", repoName, errors.New("cannot remove repository because some applications from it are installed"))
 			errOcurred = true
 			continue
 		}
