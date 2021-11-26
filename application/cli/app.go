@@ -7,7 +7,7 @@ import (
 var MyApps *cliv2.App = &cliv2.App{
 	Name:                 "myapps",
 	Usage:                "Universal command line tool for managing manually installed applications",
-	Version:              "1.1.0",
+	Version:              "1.1.1",
 	EnableBashCompletion: true,
 	HideHelpCommand:      true,
 	Authors: []*cliv2.Author{
