@@ -1,7 +1,11 @@
 #!/bin/bash
 
 echo "MyApps installer/updater"
-echo "Run this as root or it won't work properly!"
+
+if [ $(id -u) -ne 0 ]; then
+  echo "Run this as root or it won't work properly!"
+  exit 1
+fi
 
 echo " -> Copying application"
 rm -rf /usr/bin/myapps
