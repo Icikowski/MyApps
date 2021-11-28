@@ -33,3 +33,28 @@ contents:
     uninstall_scenario:
       - rm -rf /usr/local/bin/bat
       - rm -rf /etc/bash_completion.d/bat
+  - name: lazygit
+    description: simple terminal UI for git commands 
+    newest_version_check:
+      - curl -Ls -o /dev/null -X HEAD "https://github.com/jesseduffield/lazygit/releases/latest" -w %{url_effective} | sed 's#.*/##; s/v//'
+    current_version_check:
+      - lazygit --version | sed "s/.*version=\([0-9.]*\).*/\1/"
+    install_scenario:
+      - rm -rf /tmp/lazygit-install
+      - mkdir /tmp/lazygit-install
+      - wget -q -O /tmp/lazygit-install/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
+      - (cd /tmp/lazygit-install; tar -xzf lazygit.tgz)
+      - cp /tmp/lazygit-install/lazygit /usr/local/bin/lazygit
+      - chmod a+x /usr/local/bin/lazygit
+      - rm -rf /tmp/lazygit-install
+    update_scenario:
+      - rm -rf /usr/local/bin/lazygit
+      - rm -rf /tmp/lazygit-install
+      - mkdir /tmp/lazygit-install
+      - wget -q -O /tmp/lazygit-install/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
+      - (cd /tmp/lazygit-install; tar -xzf lazygit.tgz)
+      - cp /tmp/lazygit-install/lazygit /usr/local/bin/lazygit
+      - chmod a+x /usr/local/bin/lazygit
+      - rm -rf /tmp/lazygit-install
+    uninstall_scenario:
+      - rm -rf /usr/local/bin/lazygit
