@@ -20,7 +20,7 @@ jobs:
     - name: Get dependencies
       run: make get
     - name: Build & pack application
-      run: CURRENT_TAG=${GITHUB_REF/refs\/tags\/v/})} make
+      run: CURRENT_TAG=${GITHUB_REF/refs\/tags\/v/} make
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.2.4
       with:
