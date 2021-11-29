@@ -4,10 +4,16 @@ import (
 	cliv2 "github.com/urfave/cli/v2"
 )
 
+var version = "unknown"
+var gitCommit = "unknown"
+
 var MyApps *cliv2.App = &cliv2.App{
-	Name:                 "myapps",
-	Usage:                "Universal command line tool for managing manually installed applications",
-	Version:              "1.2.0",
+	Name:    "myapps",
+	Usage:   "Universal command line tool for managing manually installed applications",
+	Version: version,
+	Metadata: map[string]interface{}{
+		"Git commit": gitCommit,
+	},
 	EnableBashCompletion: true,
 	HideHelpCommand:      true,
 	Authors: []*cliv2.Author{
