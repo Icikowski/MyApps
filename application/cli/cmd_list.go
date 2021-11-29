@@ -3,11 +3,13 @@ package cli
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/fatih/color"
 	"github.com/rodaine/table"
 	cliv2 "github.com/urfave/cli/v2"
 	"icikowski.pl/myapps/config"
+	"icikowski.pl/myapps/types"
 )
 
 const (
@@ -43,56 +45,71 @@ func list(ctx *cliv2.Context) error {
 		WithHeaderFormatter(headerFormatter).
 		WithFirstColumnFormatter(conditionalFirstColumnFormatter)
 
+	barLock, tableLock, waitGroup := sync.Mutex{}, sync.Mutex{}, sync.WaitGroup{}
+
 	bar := progressBar.Start(len(deployments))
 	for _, deployment := range deployments {
-		sign, currentVersion, latestVersion, details := signError, "N/A", "N/A", "-"
+		waitGroup.Add(1)
+		deployment := deployment
 
-		if repo, ok := repos.FindByName(deployment.Repository); ok {
-			if app, ok := repo.Contents.FindByName(deployment.Application); ok {
-				errs := []error{}
+		go func(deployment types.Deployment) {
+			sign, currentVersion, latestVersion, details := signError, "N/A", "N/A", "-"
 
-				currentVersionObj, err := app.GetCurrentVersion()
-				if err != nil {
-					errs = append(errs, err)
-				} else {
-					currentVersion = currentVersionObj.String()
-				}
+			if repo, ok := repos.FindByName(deployment.Repository); ok {
+				if app, ok := repo.Contents.FindByName(deployment.Application); ok {
+					errs := []error{}
 
-				latestVersionObj, err := app.GetLatestVersion()
-				if err != nil {
-					errs = append(errs, err)
-				} else {
-					latestVersion = latestVersionObj.String()
-				}
-
-				if len(errs) != 0 {
-					strErrs := []string{}
-					for _, err := range errs {
-						strErrs = append(strErrs, err.Error())
+					currentVersionObj, err := app.GetCurrentVersion()
+					if err != nil {
+						errs = append(errs, err)
+					} else {
+						currentVersion = currentVersionObj.String()
 					}
 
-					details = fmt.Sprintf("Cannot proceed with version check: %s",
-						strings.Join(strErrs, "; "),
-					)
-				} else if currentVersionObj.LessThan(latestVersionObj) {
-					sign = signUpdate
-					details = "Update available"
+					latestVersionObj, err := app.GetLatestVersion()
+					if err != nil {
+						errs = append(errs, err)
+					} else {
+						latestVersion = latestVersionObj.String()
+					}
+
+					if len(errs) != 0 {
+						strErrs := []string{}
+						for _, err := range errs {
+							strErrs = append(strErrs, err.Error())
+						}
+
+						details = fmt.Sprintf("Cannot proceed with version check: %s",
+							strings.Join(strErrs, "; "),
+						)
+					} else if currentVersionObj.LessThan(latestVersionObj) {
+						sign = signUpdate
+						details = "Update available"
+					} else {
+						sign = ""
+					}
 				} else {
-					sign = ""
+					details = "Application not found in repository"
 				}
 			} else {
-				details = "Application not found in repository"
+				details = "Repository not found"
 			}
-		} else {
-			details = "Repository not found"
-		}
 
-		tbl.AddRow(
-			sign, deployment.String(),
-			currentVersion, latestVersion, details,
-		)
-		bar.Increment()
+			tableLock.Lock()
+			tbl.AddRow(
+				sign, deployment.String(),
+				currentVersion, latestVersion, details,
+			)
+			tableLock.Unlock()
+
+			barLock.Lock()
+			bar.Increment()
+			barLock.Unlock()
+
+			waitGroup.Done()
+		}(deployment)
 	}
+	waitGroup.Wait()
 	finishProgressBar(bar)
 	tbl.Print()
 	return nil

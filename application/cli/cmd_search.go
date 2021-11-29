@@ -3,6 +3,7 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/rodaine/table"
 	cliv2 "github.com/urfave/cli/v2"
@@ -92,23 +93,38 @@ func search(ctx *cliv2.Context) error {
 			WithHeaderFormatter(headerFormatter).
 			WithFirstColumnFormatter(firstColumnFormatter)
 
+		barLock, tableLock, waitGroup := sync.Mutex{}, sync.Mutex{}, sync.WaitGroup{}
+
 		bar := progressBar.Start(len(foundApps))
+		waitGroup.Add(len(foundApps))
 		for _, app := range foundApps {
-			bar.Increment()
-			ver, err := app.application.GetLatestVersion()
+			app := app
 
-			var displayVersion string
-			if err != nil {
-				displayVersion = err.Error()
-			} else {
-				displayVersion = ver.String()
-			}
+			go func(app applicationWrapper) {
+				ver, err := app.application.GetLatestVersion()
 
-			tbl.AddRow(
-				fmt.Sprintf("%s/%s", app.repoName, app.application.Name),
-				displayVersion, app.application.Description,
-			)
+				var displayVersion string
+				if err != nil {
+					displayVersion = err.Error()
+				} else {
+					displayVersion = ver.String()
+				}
+
+				tableLock.Lock()
+				tbl.AddRow(
+					fmt.Sprintf("%s/%s", app.repoName, app.application.Name),
+					displayVersion, app.application.Description,
+				)
+				tableLock.Unlock()
+
+				barLock.Lock()
+				bar.Increment()
+				barLock.Unlock()
+
+				waitGroup.Done()
+			}(app)
 		}
+		waitGroup.Wait()
 		finishProgressBar(bar)
 		tbl.Print()
 	}
