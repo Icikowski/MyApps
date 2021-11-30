@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -33,16 +34,31 @@ func (app Application) GetCurrentVersion() (*version.Version, error) {
 	return version.NewVersion(output)
 }
 
+// runStep runs single step of any scenario and returns error that contains
+// information that user needs to debug issue with the scenario
+func (app Application) runStep(index int, step string, env []string) (string, error) {
+	cmd := exec.Command("sh", "-c", step)
+	cmd.Env = env
+
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return string(out), fmt.Errorf(
+			"step %d failed\n\ncmd: %s\nerror: %w\noutput:\n%s\n",
+			index, step, err, string(out),
+		)
+	}
+	return string(out), nil
+}
+
 // GetLatestVersion returns the latest version of the application.
 func (app Application) GetLatestVersion() (*version.Version, error) {
 	var output string
-	for _, step := range app.NewestVersionCheck {
-		cmd := exec.Command("sh", "-c", step)
-		rawOutput, err := cmd.Output()
+	for i, step := range app.NewestVersionCheck {
+		rawOutput, err := app.runStep(i, step, []string{})
 		if err != nil {
 			return nil, err
 		}
-		output = strings.TrimSpace(string(rawOutput))
+		output = strings.TrimSpace(rawOutput)
 	}
 	return version.NewVersion(output)
 }
@@ -63,11 +79,9 @@ func (app Application) Install() error {
 		"LATEST_VERSION="+latestVersion.String(),
 	)
 
-	for _, step := range app.InstallScenario {
+	for i, step := range app.InstallScenario {
 		bar.Increment()
-		cmd := exec.Command("sh", "-c", step)
-		cmd.Env = commandEnvironment
-		err := cmd.Run()
+		_, err := app.runStep(i, step, commandEnvironment)
 		if err != nil {
 			return err
 		}
@@ -99,11 +113,9 @@ func (app Application) Update() error {
 		"LATEST_VERSION="+latestVersion.String(),
 	)
 
-	for _, step := range app.UpdateScenario {
+	for i, step := range app.UpdateScenario {
 		bar.Increment()
-		cmd := exec.Command("sh", "-c", step)
-		cmd.Env = commandEnvironment
-		err := cmd.Run()
+		_, err := app.runStep(i, step, commandEnvironment)
 		if err != nil {
 			return err
 		}
@@ -128,11 +140,9 @@ func (app Application) Uninstall() error {
 		"CURRENT_VERSION="+currentVersion.String(),
 	)
 
-	for _, step := range app.UninstallScenario {
+	for i, step := range app.UninstallScenario {
 		bar.Increment()
-		cmd := exec.Command("sh", "-c", step)
-		cmd.Env = commandEnvironment
-		err := cmd.Run()
+		_, err := app.runStep(i, step, commandEnvironment)
 		if err != nil {
 			return err
 		}
