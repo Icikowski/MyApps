@@ -55,7 +55,7 @@ contents: []
 
 # Those environment variables are available inside the scenarios:
 # - LATEST_VERSION (in install & update scenarios)
-# - CURRENT_VERSION (in update & uninstall scenario)
-# - TEMP - path to temporary directory that will be removed after scenario (in update & uninstall scenario)
+# - CURRENT_VERSION (in update & uninstall scenarios)
+# - TEMP - path to temporary directory that will be removed after scenario (in install & update scenarios)
 ```
 </details>
