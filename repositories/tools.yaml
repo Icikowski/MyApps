@@ -9,27 +9,21 @@ contents:
     current_version_check:
       - bat --version | sed 's/bat //'
     install_scenario:
-      - rm -rf /tmp/bat-install
-      - mkdir /tmp/bat-install
-      - wget -q -O /tmp/bat-install/bat.tgz "https://github.com/sharkdp/bat/releases/download/v${LATEST_VERSION}/bat-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
-      - (cd /tmp/bat-install; tar -xzf bat.tgz --strip-components=1)
-      - cp /tmp/bat-install/bat /usr/local/bin/bat
+      - wget -q -O ${TEMP}/bat.tgz "https://github.com/sharkdp/bat/releases/download/v${LATEST_VERSION}/bat-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+      - (cd ${TEMP}; tar -xzf bat.tgz --strip-components=1)
+      - cp ${TEMP}/bat /usr/local/bin/bat
       - chmod a+x /usr/local/bin/bat
-      - cp /tmp/bat-install/autocomplete/bat.bash /etc/bash_completion.d/bat
+      - cp ${TEMP}/autocomplete/bat.bash /etc/bash_completion.d/bat
       - chmod a+x /etc/bash_completion.d/bat
-      - rm -rf /tmp/bat-install
     update_scenario:
       - rm -rf /usr/local/bin/bat
       - rm -rf /etc/bash_completion.d/bat
-      - rm -rf /tmp/bat-install
-      - mkdir /tmp/bat-install
-      - wget -q -O /tmp/bat-install/bat.tgz "https://github.com/sharkdp/bat/releases/download/v${LATEST_VERSION}/bat-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
-      - (cd /tmp/bat-install; tar -xzf bat.tgz --strip-components=1)
-      - cp /tmp/bat-install/bat /usr/local/bin/bat
+      - wget -q -O ${TEMP}/bat.tgz "https://github.com/sharkdp/bat/releases/download/v${LATEST_VERSION}/bat-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+      - (cd ${TEMP}; tar -xzf bat.tgz --strip-components=1)
+      - cp ${TEMP}/bat /usr/local/bin/bat
       - chmod a+x /usr/local/bin/bat
-      - cp /tmp/bat-install/autocomplete/bat.bash /etc/bash_completion.d/bat
+      - cp ${TEMP}/autocomplete/bat.bash /etc/bash_completion.d/bat
       - chmod a+x /etc/bash_completion.d/bat
-      - rm -rf /tmp/bat-install
     uninstall_scenario:
       - rm -rf /usr/local/bin/bat
       - rm -rf /etc/bash_completion.d/bat
@@ -40,21 +34,40 @@ contents:
     current_version_check:
       - lazygit --version | sed "s/.*version=\([0-9.]*\).*/\1/"
     install_scenario:
-      - rm -rf /tmp/lazygit-install
-      - mkdir /tmp/lazygit-install
-      - wget -q -O /tmp/lazygit-install/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
-      - (cd /tmp/lazygit-install; tar -xzf lazygit.tgz)
-      - cp /tmp/lazygit-install/lazygit /usr/local/bin/lazygit
+      - wget -q -O ${TEMP}/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
+      - (cd ${TEMP}; tar -xzf lazygit.tgz)
+      - cp ${TEMP}/lazygit /usr/local/bin/lazygit
       - chmod a+x /usr/local/bin/lazygit
-      - rm -rf /tmp/lazygit-install
     update_scenario:
       - rm -rf /usr/local/bin/lazygit
-      - rm -rf /tmp/lazygit-install
-      - mkdir /tmp/lazygit-install
-      - wget -q -O /tmp/lazygit-install/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
-      - (cd /tmp/lazygit-install; tar -xzf lazygit.tgz)
-      - cp /tmp/lazygit-install/lazygit /usr/local/bin/lazygit
+      - wget -q -O ${TEMP}/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
+      - (cd ${TEMP}; tar -xzf lazygit.tgz)
+      - cp ${TEMP}/lazygit /usr/local/bin/lazygit
       - chmod a+x /usr/local/bin/lazygit
-      - rm -rf /tmp/lazygit-install
     uninstall_scenario:
       - rm -rf /usr/local/bin/lazygit
+  - name: yq
+    description: yq is a portable command-line YAML processor 
+    newest_version_check:
+      - curl -Ls -o /dev/null -X HEAD "https://github.com/mikefarah/yq/releases/latest" -w %{url_effective} | sed 's#.*/##; s/v//'
+    current_version_check:
+      - yq --version | sed "s/.*version \([0-9.]*\).*/\1/"
+    install_scenario:
+      - wget -q -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_linux_amd64.tar.gz"
+      - (cd ${TEMP}; tar -xzf yq.tgz)
+      - cp ${TEMP}/yq_linux_amd64 /usr/local/bin/yq
+      - chmod a+x /usr/local/bin/yq
+      - cp ${TEMP}/yq.1 /usr/local/share/man/man1/yq.1
+      - chmod 0644 /usr/local/share/man/man1/yq.1
+    update_scenario:
+      - rm -rf /usr/local/bin/yq
+      - rm -rf /usr/local/share/man/man1/yq.1
+      - wget -q -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_linux_amd64.tar.gz"
+      - (cd ${TEMP}; tar -xzf yq.tgz)
+      - cp ${TEMP}/yq_linux_amd64 /usr/local/bin/yq
+      - chmod a+x /usr/local/bin/yq
+      - cp ${TEMP}/yq.1 /usr/local/share/man/man1/yq.1
+      - chmod 0644 /usr/local/share/man/man1/yq.1
+    uninstall_scenario:
+      - rm -rf /usr/local/bin/yq
+      - rm -rf /usr/local/share/man/man1/yq.1
