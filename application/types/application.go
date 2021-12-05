@@ -65,7 +65,8 @@ func (app Application) GetLatestVersion() (*version.Version, error) {
 
 // Install installs the application by executing the install scenario.
 func (app Application) Install() error {
-	bar := progressBar.Start(len(app.InstallScenario) + 2)
+	bar := progressBar.Start(len(app.InstallScenario) + 3)
+	defer finishProgressBar(bar)
 
 	bar.Increment()
 	latestVersion, err := app.GetLatestVersion()
@@ -74,9 +75,17 @@ func (app Application) Install() error {
 	}
 
 	bar.Increment()
+	tmpDir, cleanup, err := Temp()
+	if err != nil {
+		return err
+	}
+	defer cleanup()
+
+	bar.Increment()
 	commandEnvironment := append(
 		os.Environ(),
 		"LATEST_VERSION="+latestVersion.String(),
+		"TEMP="+tmpDir,
 	)
 
 	for i, step := range app.InstallScenario {
@@ -86,13 +95,13 @@ func (app Application) Install() error {
 			return err
 		}
 	}
-	finishProgressBar(bar)
 	return nil
 }
 
 // Update updates the application by executing the update scenario.
 func (app Application) Update() error {
-	bar := progressBar.Start(len(app.UpdateScenario) + 3)
+	bar := progressBar.Start(len(app.UpdateScenario) + 4)
+	defer finishProgressBar(bar)
 
 	bar.Increment()
 	currentVersion, err := app.GetLatestVersion()
@@ -107,10 +116,18 @@ func (app Application) Update() error {
 	}
 
 	bar.Increment()
+	tmpDir, cleanup, err := Temp()
+	if err != nil {
+		return err
+	}
+	defer cleanup()
+
+	bar.Increment()
 	commandEnvironment := append(
 		os.Environ(),
 		"CURRENT_VERSION="+currentVersion.String(),
 		"LATEST_VERSION="+latestVersion.String(),
+		"TEMP="+tmpDir,
 	)
 
 	for i, step := range app.UpdateScenario {
@@ -120,7 +137,6 @@ func (app Application) Update() error {
 			return err
 		}
 	}
-	finishProgressBar(bar)
 	return nil
 }
 
