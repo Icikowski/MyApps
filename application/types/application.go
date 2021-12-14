@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-version"
+	"icikowski.pl/myapps/common"
 )
 
 // Application represents the definition of an external application.
@@ -34,16 +35,16 @@ func (app Application) GetCurrentVersion() (*version.Version, error) {
 	return version.NewVersion(output)
 }
 
-// runStep runs single step of any scenario and returns error that contains
+// executeStep runs single step of any scenario and returns error that contains
 // information that user needs to debug issue with the scenario
-func (app Application) runStep(index int, step string, env []string) (string, error) {
+func executeStep(index int, step string, env []string) (string, error) {
 	cmd := exec.Command("sh", "-c", step)
 	cmd.Env = env
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return string(out), fmt.Errorf(
-			"step %d failed\n\ncmd: %s\nerror: %w\noutput:\n%s\n",
+			"step %d failed\n\ncmd: %s\nerror: %w\noutput:\n%s",
 			index, step, err, string(out),
 		)
 	}
@@ -54,7 +55,7 @@ func (app Application) runStep(index int, step string, env []string) (string, er
 func (app Application) GetLatestVersion() (*version.Version, error) {
 	var output string
 	for i, step := range app.NewestVersionCheck {
-		rawOutput, err := app.runStep(i, step, []string{})
+		rawOutput, err := executeStep(i, step, []string{})
 		if err != nil {
 			return nil, err
 		}
@@ -65,8 +66,8 @@ func (app Application) GetLatestVersion() (*version.Version, error) {
 
 // Install installs the application by executing the install scenario.
 func (app Application) Install() error {
-	bar := progressBar.Start(len(app.InstallScenario) + 3)
-	defer finishProgressBar(bar)
+	bar := common.NewProgressBar(len(app.InstallScenario) + 3)
+	defer bar.Finish()
 
 	bar.Increment()
 	latestVersion, err := app.GetLatestVersion()
@@ -75,7 +76,7 @@ func (app Application) Install() error {
 	}
 
 	bar.Increment()
-	tmpDir, cleanup, err := Temp()
+	tmpDir, cleanup, err := GetTempDir()
 	if err != nil {
 		return err
 	}
@@ -90,7 +91,7 @@ func (app Application) Install() error {
 
 	for i, step := range app.InstallScenario {
 		bar.Increment()
-		_, err := app.runStep(i, step, commandEnvironment)
+		_, err := executeStep(i, step, commandEnvironment)
 		if err != nil {
 			return err
 		}
@@ -100,8 +101,8 @@ func (app Application) Install() error {
 
 // Update updates the application by executing the update scenario.
 func (app Application) Update() error {
-	bar := progressBar.Start(len(app.UpdateScenario) + 4)
-	defer finishProgressBar(bar)
+	bar := common.NewProgressBar(len(app.UpdateScenario) + 3)
+	defer bar.Finish()
 
 	bar.Increment()
 	currentVersion, err := app.GetLatestVersion()
@@ -116,7 +117,7 @@ func (app Application) Update() error {
 	}
 
 	bar.Increment()
-	tmpDir, cleanup, err := Temp()
+	tmpDir, cleanup, err := GetTempDir()
 	if err != nil {
 		return err
 	}
@@ -132,7 +133,7 @@ func (app Application) Update() error {
 
 	for i, step := range app.UpdateScenario {
 		bar.Increment()
-		_, err := app.runStep(i, step, commandEnvironment)
+		_, err := executeStep(i, step, commandEnvironment)
 		if err != nil {
 			return err
 		}
@@ -142,7 +143,8 @@ func (app Application) Update() error {
 
 // Uninstall removes the application by executing the uninstall scenario.
 func (app Application) Uninstall() error {
-	bar := progressBar.Start(len(app.UninstallScenario) + 2)
+	bar := common.NewProgressBar(len(app.UninstallScenario) + 3)
+	defer bar.Finish()
 
 	bar.Increment()
 	currentVersion, err := app.GetLatestVersion()
@@ -158,12 +160,11 @@ func (app Application) Uninstall() error {
 
 	for i, step := range app.UninstallScenario {
 		bar.Increment()
-		_, err := app.runStep(i, step, commandEnvironment)
+		_, err := executeStep(i, step, commandEnvironment)
 		if err != nil {
 			return err
 		}
 	}
-	finishProgressBar(bar)
 	return nil
 }
 

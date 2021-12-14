@@ -6,6 +6,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/hashicorp/go-version"
 	"github.com/rodaine/table"
+	"icikowski.pl/myapps/common"
 )
 
 // Repository represents the applications repository.
@@ -40,10 +41,10 @@ func (repo Repository) NewestVersions() (map[string]*version.Version, map[string
 // Print writes pretty printed repository details to stdout.
 func (repo Repository) Print() {
 	fmt.Printf("%s %s\n%s %s\n%s %s\n%s %d\n",
-		headerFormatter("Repository name:"), color.BlueString(repo.Name),
-		headerFormatter("Description:    "), repo.Description,
-		headerFormatter("Maintainer:     "), repo.Maintainer,
-		headerFormatter("Apps count:     "), len(repo.Contents),
+		common.FmtHeader("Repository name:"), color.BlueString(repo.Name),
+		common.FmtHeader("Description:    "), repo.Description,
+		common.FmtHeader("Maintainer:     "), repo.Maintainer,
+		common.FmtHeader("Apps count:     "), len(repo.Contents),
 	)
 
 	if len(repo.Contents) > 0 {
@@ -51,8 +52,8 @@ func (repo Repository) Print() {
 
 		tbl := table.New("Application name", "Description")
 		tbl.
-			WithHeaderFormatter(headerFormatter).
-			WithFirstColumnFormatter(firstColumnFormatter)
+			WithHeaderFormatter(common.FmtHeader).
+			WithFirstColumnFormatter(common.FmtFirstCol)
 
 		for _, app := range repo.Contents {
 			tbl.AddRow(app.Name, app.Description)
@@ -78,14 +79,14 @@ func (repos Repositories) FindByName(name string) (Repository, bool) {
 // Print writes pretty printed repositories list to stdout.
 func (repos Repositories) Print(defaultRepositoryName string) {
 	fmt.Printf("%s %d\nDefault repository is marked with %s sign.\n\n",
-		headerFormatter("Number of repositories:"), len(repos),
-		firstColumnFormatter("*"),
+		common.FmtHeader("Number of repositories:"), len(repos),
+		common.FmtFirstCol("*"),
 	)
 
 	tbl := table.New("", "Name", "Description", "Maintainer", "Apps count")
 	tbl.
-		WithHeaderFormatter(headerFormatter).
-		WithFirstColumnFormatter(firstColumnFormatter)
+		WithHeaderFormatter(common.FmtHeader).
+		WithFirstColumnFormatter(common.FmtFirstCol)
 
 	sign := map[bool]string{true: "*", false: ""}
 

@@ -7,6 +7,7 @@ import (
 
 	"github.com/rodaine/table"
 	cliv2 "github.com/urfave/cli/v2"
+	"icikowski.pl/myapps/common"
 	"icikowski.pl/myapps/config"
 	"icikowski.pl/myapps/types"
 )
@@ -40,7 +41,7 @@ func search(ctx *cliv2.Context) error {
 		for _, repoName := range ctx.StringSlice("repo") {
 			repo, ok := allRepos.FindByName(repoName)
 			if !ok {
-				printErrorWhileMsg("loading repository", repoName, errors.New("no such repository decalred"))
+				common.PrintErrorWhileMsg("loading repository", repoName, errors.New("no such repository decalred"))
 				errorOcurred = true
 				continue
 			}
@@ -49,7 +50,7 @@ func search(ctx *cliv2.Context) error {
 		}
 
 		if errorOcurred {
-			return exitErrMsg("some repositories were not found")
+			return common.ExitWithErrMsg("some repositories were not found")
 		}
 	} else {
 		reposToSearchIn = allRepos
@@ -68,7 +69,7 @@ func search(ctx *cliv2.Context) error {
 			args := ctx.Args()
 
 			if !args.Present() {
-				return exitErrMsg("at least one application name must be specified")
+				return common.ExitWithErrMsg("at least one application name must be specified")
 			}
 
 			for _, appName := range args.Slice() {
@@ -84,18 +85,18 @@ func search(ctx *cliv2.Context) error {
 		}
 	}
 
-	fmt.Printf("Found %s match(es)\n", headerFormatter("%d", len(foundApps)))
+	fmt.Printf("Found %s match(es)\n", common.FmtHeader("%d", len(foundApps)))
 
 	if len(foundApps) != 0 {
 		fmt.Println()
 		tbl := table.New("Application", "Version", "Description")
 		tbl.
-			WithHeaderFormatter(headerFormatter).
-			WithFirstColumnFormatter(firstColumnFormatter)
+			WithHeaderFormatter(common.FmtHeader).
+			WithFirstColumnFormatter(common.FmtFirstCol)
 
-		barLock, tableLock, waitGroup := sync.Mutex{}, sync.Mutex{}, sync.WaitGroup{}
+		tableLock, waitGroup := sync.Mutex{}, sync.WaitGroup{}
 
-		bar := progressBar.Start(len(foundApps))
+		bar := common.NewProgressBar(len(foundApps))
 		waitGroup.Add(len(foundApps))
 		for _, app := range foundApps {
 			app := app
@@ -117,15 +118,12 @@ func search(ctx *cliv2.Context) error {
 				)
 				tableLock.Unlock()
 
-				barLock.Lock()
 				bar.Increment()
-				barLock.Unlock()
-
 				waitGroup.Done()
 			}(app)
 		}
 		waitGroup.Wait()
-		finishProgressBar(bar)
+		bar.Finish()
 		tbl.Print()
 	}
 	return nil

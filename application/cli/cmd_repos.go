@@ -25,7 +25,7 @@ var addReposFlags = []cliv2.Flag{
 func addRepos(ctx *cliv2.Context) error {
 	args := ctx.Args()
 	if !args.Present() {
-		return exitErrMsg("at least one input file must be specified")
+		return common.ExitWithErrMsg("at least one input file must be specified")
 	}
 
 	fmt.Println("Processing", color.New(color.FgHiWhite, color.Bold).Sprint(args.Len()), "file(s)...")
@@ -34,14 +34,14 @@ func addRepos(ctx *cliv2.Context) error {
 	for _, filename := range args.Slice() {
 		contents, err := ioutil.ReadFile(filename)
 		if err != nil {
-			printErrorWhileMsg("reading file", filename, err)
+			common.PrintErrorWhileMsg("reading file", filename, err)
 			errOcurred = true
 			continue
 		}
 
 		var repo types.Repository
 		if err := yaml.Unmarshal(contents, &repo); err != nil {
-			printErrorWhileMsg("parsing file", filename, err)
+			common.PrintErrorWhileMsg("parsing file", filename, err)
 			errOcurred = true
 			continue
 		}
@@ -49,22 +49,22 @@ func addRepos(ctx *cliv2.Context) error {
 		target := fmt.Sprintf("%s/%s.yaml", common.PathRepositories, repo.Name)
 
 		if _, err := os.Stat(target); err == nil && !ctx.Bool("force") {
-			printErrorWhileMsg("adding repository", repo.Name, errors.New("repository already exists"))
+			common.PrintErrorWhileMsg("adding repository", repo.Name, errors.New("repository already exists"))
 			errOcurred = true
 			continue
 		}
 
 		if err := ioutil.WriteFile(target, contents, 0644); err != nil {
-			printErrorWhileMsg("storing repository", repo.Name, err)
+			common.PrintErrorWhileMsg("storing repository", repo.Name, err)
 			errOcurred = true
 			continue
 		}
 
-		printSuccessfully("added repository", repo.Name)
+		common.PrintSuccessfullyMsg("added repository", repo.Name)
 	}
 
 	if errOcurred {
-		return exitWarnMsg("some repositories were not stored due to errors")
+		return common.ExitWithWarnMsg("some repositories were not stored due to errors")
 	}
 	return nil
 }
@@ -76,13 +76,13 @@ func listRepos(ctx *cliv2.Context) error {
 
 func showRepo(ctx *cliv2.Context) error {
 	if ctx.Args().Len() != 1 {
-		return exitErrMsg("exactly one repository name must be specified")
+		return common.ExitWithErrMsg("exactly one repository name must be specified")
 	}
 
 	repoName := ctx.Args().First()
 	repo, ok := config.GetRepositories().FindByName(repoName)
 	if !ok {
-		return exitErrMsg(fmt.Sprint("repository", color.BlueString(repoName), "not found"))
+		return common.ExitWithErrMsg(fmt.Sprint("repository", color.BlueString(repoName), "not found"))
 	}
 
 	repo.Print()
@@ -92,7 +92,7 @@ func showRepo(ctx *cliv2.Context) error {
 func removeRepos(ctx *cliv2.Context) error {
 	args := ctx.Args()
 	if !args.Present() {
-		return exitErrMsg("at least one repository must be specified")
+		return common.ExitWithErrMsg("at least one repository must be specified")
 	}
 
 	fmt.Println("Processing", color.New(color.FgHiWhite, color.Bold).Sprint(args.Len()), "repo(s)...")
@@ -111,19 +111,19 @@ func removeRepos(ctx *cliv2.Context) error {
 	for _, repoName := range args.Slice() {
 		repo, ok := repos.FindByName(repoName)
 		if !ok {
-			printErrorWhileMsg("removing repository", repoName, errors.New("repository not found"))
+			common.PrintErrorWhileMsg("removing repository", repoName, errors.New("repository not found"))
 			errOcurred = true
 			continue
 		}
 
 		if repo.Name == config.GetConfiguration().DefaultRepository {
-			printErrorWhileMsg("removing repository", repoName, errors.New("cannot remove default repository"))
+			common.PrintErrorWhileMsg("removing repository", repoName, errors.New("cannot remove default repository"))
 			errOcurred = true
 			continue
 		}
 
 		if _, ok := usedRepos[repo.Name]; ok {
-			printErrorWhileMsg("removing repository", repoName, errors.New("cannot remove repository because some applications from it are installed"))
+			common.PrintErrorWhileMsg("removing repository", repoName, errors.New("cannot remove repository because some applications from it are installed"))
 			errOcurred = true
 			continue
 		}
@@ -131,16 +131,16 @@ func removeRepos(ctx *cliv2.Context) error {
 		target := fmt.Sprintf("%s/%s.yaml", common.PathRepositories, repoName)
 
 		if err := os.Remove(target); err != nil {
-			printErrorWhileMsg("removing repository", repoName, err)
+			common.PrintErrorWhileMsg("removing repository", repoName, err)
 			errOcurred = true
 			continue
 		}
 
-		printSuccessfully("removed repository", repoName)
+		common.PrintSuccessfullyMsg("removed repository", repoName)
 	}
 
 	if errOcurred {
-		return exitWarnMsg("some repositories were not removed due to errors")
+		return common.ExitWithErrMsg("some repositories were not removed due to errors")
 	}
 	return nil
 }

@@ -5,11 +5,12 @@ import (
 	"runtime"
 
 	cliv2 "github.com/urfave/cli/v2"
+	"icikowski.pl/myapps/common"
 )
 
 func basicChecks(ctx *cliv2.Context) error {
 	if runtime.GOOS == "windows" {
-		return exitErrMsg("this application is not supported on Windows")
+		return common.ExitWithErrMsg("this application is not supported on Windows")
 	}
 	return nil
 }
@@ -21,11 +22,11 @@ func allChecks(ctx *cliv2.Context) error {
 
 	currentUser, err := user.Current()
 	if err != nil {
-		return exitErrMsg("failed to get current user")
+		return common.ExitWithErrMsg("failed to get current user")
 	}
 
 	if currentUser.Username != "root" && len(ctx.Command.Name) > 0 {
-		return exitErrMsg("this command must be executed as root")
+		return common.ExitWithErrMsg("this command must be executed as root")
 	}
 
 	return nil

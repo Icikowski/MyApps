@@ -7,6 +7,7 @@ import (
 
 	"github.com/fatih/color"
 	cliv2 "github.com/urfave/cli/v2"
+	"icikowski.pl/myapps/common"
 	"icikowski.pl/myapps/config"
 	"icikowski.pl/myapps/types"
 )
@@ -14,7 +15,7 @@ import (
 func install(ctx *cliv2.Context) error {
 	args := ctx.Args()
 	if !args.Present() {
-		return exitErrMsg("specify at least one application to install")
+		return common.ExitWithErrMsg("specify at least one application to install")
 	}
 
 	defaultRepo := config.GetConfiguration().DefaultRepository
@@ -29,7 +30,7 @@ func install(ctx *cliv2.Context) error {
 	repos := config.GetRepositories()
 	deployments := config.GetDeployments()
 
-	fmt.Printf("Processing %s application(s)...\n", headerFormatter("%d", len(effectiveApps)))
+	fmt.Printf("Processing %s application(s)...\n", common.FmtHeader("%d", len(effectiveApps)))
 
 	errorsOcurred := false
 	for _, appFullName := range effectiveApps {
@@ -37,31 +38,31 @@ func install(ctx *cliv2.Context) error {
 		splittedAppFullName := strings.Split(appFullName, "/")
 		repoName, appName := splittedAppFullName[0], splittedAppFullName[1]
 
-		printBox(infoBox, "Checking for deployment presence")
+		common.BoxInfo.Print("Checking for deployment presence")
 		if deployments.Exists(repoName, appName) {
-			printBox(warningBox, "Application is already installed")
+			common.BoxWarn.Print("Application is already installed")
 			continue
 		}
 
-		printBox(infoBox, "Checking for repository presence")
+		common.BoxInfo.Print("Checking for repository presence")
 		repo, ok := repos.FindByName(repoName)
 		if !ok {
-			printBox(errorBox, "Repository not found")
+			common.BoxErr.Print("Repository not found")
 			errorsOcurred = true
 			continue
 		}
 
-		printBox(infoBox, "Checking for application presence")
+		common.BoxInfo.Print("Checking for application presence")
 		app, ok := repo.Contents.FindByName(appName)
 		if !ok {
-			printBox(errorBox, "Application not found")
+			common.BoxErr.Print("Application not found")
 			errorsOcurred = true
 			continue
 		}
 
-		printBox(infoBox, "Installing application")
+		common.BoxInfo.Print("Installing application")
 		if err := app.Install(); err != nil {
-			printBox(errorBox, fmt.Sprintf("Failed to install application: %s", err.Error()))
+			common.BoxErr.Print(fmt.Sprintf("Failed to install application: %s", err.Error()))
 			errorsOcurred = true
 			continue
 		}
@@ -72,13 +73,13 @@ func install(ctx *cliv2.Context) error {
 			InstalledOn: time.Now(),
 			UpdatedOn:   time.Now(),
 		})
-		printBox(successBox, "Application installed successfully")
+		common.BoxSuccess.Print("Application installed successfully")
 	}
 	config.SetDeployments(deployments)
 
 	fmt.Println()
 	if errorsOcurred {
-		return exitWarnMsg("some applications were not installed")
+		return common.ExitWithWarnMsg("some applications were not installed")
 	}
 	return nil
 }

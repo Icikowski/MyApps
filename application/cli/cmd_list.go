@@ -8,6 +8,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/rodaine/table"
 	cliv2 "github.com/urfave/cli/v2"
+	"icikowski.pl/myapps/common"
 	"icikowski.pl/myapps/config"
 	"icikowski.pl/myapps/types"
 )
@@ -20,7 +21,7 @@ const (
 var conditionalFirstColumnFormatter = func(s string, i ...interface{}) string {
 	switch string(i[0].(string)[0]) {
 	case signUpdate:
-		return firstColumnFormatter(s, i...)
+		return common.FmtFirstCol(s, i...)
 	case signError:
 		return color.New(color.FgHiRed, color.Bold).Sprintf(s, i...)
 	default:
@@ -32,7 +33,7 @@ func list(ctx *cliv2.Context) error {
 	deployments := config.GetDeployments()
 	repos := config.GetRepositories()
 
-	fmt.Printf("Found %s installed application(s)\n", headerFormatter("%d", len(deployments)))
+	fmt.Printf("Found %s installed application(s)\n", common.FmtHeader("%d", len(deployments)))
 
 	if len(deployments) == 0 {
 		return nil
@@ -42,12 +43,12 @@ func list(ctx *cliv2.Context) error {
 
 	tbl := table.New("", "Application", "Current version", "Latest version", "Details")
 	tbl.
-		WithHeaderFormatter(headerFormatter).
+		WithHeaderFormatter(common.FmtHeader).
 		WithFirstColumnFormatter(conditionalFirstColumnFormatter)
 
-	barLock, tableLock, waitGroup := sync.Mutex{}, sync.Mutex{}, sync.WaitGroup{}
+	tableLock, waitGroup := sync.Mutex{}, sync.WaitGroup{}
 
-	bar := progressBar.Start(len(deployments))
+	bar := common.NewProgressBar(len(deployments))
 	for _, deployment := range deployments {
 		waitGroup.Add(1)
 		deployment := deployment
@@ -102,15 +103,12 @@ func list(ctx *cliv2.Context) error {
 			)
 			tableLock.Unlock()
 
-			barLock.Lock()
 			bar.Increment()
-			barLock.Unlock()
-
 			waitGroup.Done()
 		}(deployment)
 	}
 	waitGroup.Wait()
-	finishProgressBar(bar)
+	bar.Finish()
 	tbl.Print()
 	return nil
 }
