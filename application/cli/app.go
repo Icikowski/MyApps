@@ -99,6 +99,13 @@ var MyApps *cliv2.App = &cliv2.App{
 					Action:          removeRepos,
 					HideHelpCommand: true,
 				},
+				{
+					Name:            "default",
+					Usage:           "Gets/sets the default repository",
+					Before:          allChecks,
+					Action:          defaultRepo,
+					HideHelpCommand: true,
+				},
 			},
 			HideHelpCommand: true,
 		},

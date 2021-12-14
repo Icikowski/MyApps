@@ -144,3 +144,24 @@ func removeRepos(ctx *cliv2.Context) error {
 	}
 	return nil
 }
+
+func defaultRepo(ctx *cliv2.Context) error {
+	if ctx.Args().Len() != 1 {
+		defaultRepo := config.GetConfiguration().DefaultRepository
+		fmt.Println("Default repository name is", color.BlueString(defaultRepo))
+		return nil
+	}
+
+	repoName := ctx.Args().First()
+	repo, ok := config.GetRepositories().FindByName(repoName)
+	if !ok {
+		return common.ExitWithErrMsg(fmt.Sprint("repository", color.BlueString(repoName), "not found"))
+	}
+
+	configuration := config.GetConfiguration()
+	configuration.DefaultRepository = repo.Name
+	config.SetConfiguration(configuration)
+
+	common.PrintSuccessfullyMsg("set default repository to", repo.Name)
+	return nil
+}
