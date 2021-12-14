@@ -8,7 +8,7 @@ get:
 
 clean:
 	rm -f packaging/myapps application/myapps
-	rm -f myapps.tgz
+	rm -f myapps.tgz packaging/myapps.tgz
 	(cd application; go clean -cache)
 
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
