@@ -27,7 +27,7 @@ var MyApps *cliv2.App = &cliv2.App{
 	Commands: []*cliv2.Command{
 		{
 			Name:            "search",
-			Usage:           "Searchs for applications in configured repo(s)",
+			Usage:           "Searches for applications in configured repo(s)",
 			Before:          basicChecks,
 			Action:          search,
 			Flags:           searchFlags,
