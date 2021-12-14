@@ -82,7 +82,7 @@ func showRepo(ctx *cliv2.Context) error {
 	repoName := ctx.Args().First()
 	repo, ok := config.GetRepositories().FindByName(repoName)
 	if !ok {
-		return common.ExitWithErrMsg(fmt.Sprint("repository", color.BlueString(repoName), "not found"))
+		return common.ExitWithErrMsg(fmt.Sprint("repository ", color.BlueString(repoName), " not found"))
 	}
 
 	repo.Print()
@@ -152,10 +152,14 @@ func defaultRepo(ctx *cliv2.Context) error {
 		return nil
 	}
 
+	if err := allChecks(ctx); err != nil {
+		return err
+	}
+
 	repoName := ctx.Args().First()
 	repo, ok := config.GetRepositories().FindByName(repoName)
 	if !ok {
-		return common.ExitWithErrMsg(fmt.Sprint("repository", color.BlueString(repoName), "not found"))
+		return common.ExitWithErrMsg(fmt.Sprint("repository ", color.BlueString(repoName), " not found"))
 	}
 
 	configuration := config.GetConfiguration()

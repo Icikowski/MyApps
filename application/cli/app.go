@@ -102,7 +102,7 @@ var MyApps *cliv2.App = &cliv2.App{
 				{
 					Name:            "default",
 					Usage:           "Gets/sets the default repository",
-					Before:          allChecks,
+					Before:          basicChecks,
 					Action:          defaultRepo,
 					HideHelpCommand: true,
 				},
