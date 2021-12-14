@@ -2,6 +2,7 @@ package config
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"gopkg.in/yaml.v3"
@@ -27,12 +28,14 @@ func init() {
 	for _, file := range files {
 		contents, err := ioutil.ReadFile(file)
 		if err != nil {
-			panic(err)
+			common.PrintErrorWhileMsg("reading stored repository", file, err)
+			os.Exit(1)
 		}
 
 		var repo *types.Repository
 		if err = yaml.Unmarshal(contents, &repo); err != nil {
-			panic(err)
+			common.PrintErrorWhileMsg("parsing stored repository", file, err)
+			os.Exit(1)
 		}
 
 		repos = append(repos, *repo)
