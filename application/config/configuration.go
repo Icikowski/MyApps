@@ -27,10 +27,12 @@ func init() {
 	}
 }
 
+// GetConfiguration returns current configuration
 func GetConfiguration() types.Configuration {
 	return config
 }
 
+// SetConfiguration sets the configuration and writes it to file
 func SetConfiguration(config types.Configuration) {
 	configuration := config
 	contents, err := yaml.Marshal(configuration)

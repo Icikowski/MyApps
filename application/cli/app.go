@@ -7,6 +7,7 @@ import (
 var version = "unknown"
 var gitCommit = "unknown"
 
+// MyApps is the definition of the application and its commands
 var MyApps *cliv2.App = &cliv2.App{
 	Name:    "myapps",
 	Usage:   "Universal command line tool for managing manually installed applications",

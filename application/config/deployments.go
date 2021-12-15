@@ -25,10 +25,12 @@ func init() {
 	}
 }
 
+// GetDeployments returns the list of currently deployed applications
 func GetDeployments() types.Deployments {
 	return deployments
 }
 
+// SetDeployments sets the list of currently deployed applications and writes it to file
 func SetDeployments(d types.Deployments) {
 	deployments = d
 	contents, err := yaml.Marshal(deployments)

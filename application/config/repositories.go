@@ -42,6 +42,7 @@ func init() {
 	}
 }
 
+// GetRepositories returns the list of available repositories
 func GetRepositories() types.Repositories {
 	return repos
 }

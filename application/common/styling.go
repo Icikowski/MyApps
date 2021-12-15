@@ -21,6 +21,7 @@ var (
 // Box is a wrapper for box element
 type Box string
 
+// Print prints box with given message
 func (b Box) Print(message string) {
 	fmt.Printf("  %s %s\n", b, message)
 }
