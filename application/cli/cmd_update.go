@@ -96,7 +96,7 @@ func update(ctx *cliv2.Context) error {
 
 			deployment.UpdatedOn = time.Now()
 			deployments = deployments.Update(deployment)
-			common.BoxErr.Print("Application updated successfully")
+			common.BoxSuccess.Print("Application updated successfully")
 		} else {
 			common.BoxSuccess.Print("Application is already up to date")
 		}
