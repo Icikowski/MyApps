@@ -21,20 +21,6 @@ type Application struct {
 	CurrentVersionCheck []string `json:"current_version_check" yaml:"current_version_check"`
 }
 
-// GetCurrentVersion returns the current version of the application.
-func (app Application) GetCurrentVersion() (*version.Version, error) {
-	var output string
-	for _, step := range app.CurrentVersionCheck {
-		cmd := exec.Command("sh", "-c", step)
-		rawOutput, err := cmd.Output()
-		if err != nil {
-			return nil, err
-		}
-		output = strings.TrimSpace(string(rawOutput))
-	}
-	return version.NewVersion(output)
-}
-
 // executeStep runs single step of any scenario and returns error that contains
 // information that user needs to debug issue with the scenario
 func executeStep(index int, step string, env []string) (string, error) {
@@ -51,6 +37,19 @@ func executeStep(index int, step string, env []string) (string, error) {
 	return string(out), nil
 }
 
+// GetCurrentVersion returns the current version of the application.
+func (app Application) GetCurrentVersion() (*version.Version, error) {
+	var output string
+	for i, step := range app.CurrentVersionCheck {
+		rawOutput, err := executeStep(i, step, []string{})
+		if err != nil {
+			return nil, err
+		}
+		output = strings.TrimSpace(rawOutput)
+	}
+	return version.NewVersion(output)
+}
+
 // GetLatestVersion returns the latest version of the application.
 func (app Application) GetLatestVersion() (*version.Version, error) {
 	var output string
@@ -62,6 +61,22 @@ func (app Application) GetLatestVersion() (*version.Version, error) {
 		output = strings.TrimSpace(rawOutput)
 	}
 	return version.NewVersion(output)
+}
+
+// IsUpdateAvailable returns true if there is an update available for the
+// application.
+func (app Application) IsUpdateAvailable() (bool, error) {
+	currentVersion, err := app.GetCurrentVersion()
+	if err != nil {
+		return false, err
+	}
+
+	latestVersion, err := app.GetLatestVersion()
+	if err != nil {
+		return false, err
+	}
+
+	return currentVersion.LessThan(latestVersion), nil
 }
 
 // Install installs the application by executing the install scenario.
