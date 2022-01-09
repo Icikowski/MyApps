@@ -124,7 +124,7 @@ func update(ctx *cliv2.Context) error {
 			} else {
 				common.BoxSuccess.Print(fmt.Sprintf(
 					"%s has been updated successfully",
-					common.FmtHeader("%s", app),
+					common.FmtHeader("%s", app.Name),
 				))
 			}
 
