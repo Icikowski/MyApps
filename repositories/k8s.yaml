@@ -35,7 +35,7 @@ contents:
       - "stern -v | head -n 1 | sed 's/version: //'"
     install_scenario:
       - wget -q -O ${TEMP}/stern.tgz "https://github.com/stern/stern/releases/download/v${LATEST_VERSION}/stern_${LATEST_VERSION}_linux_amd64.tar.gz"
-      - (cd ${TEMP}; tar -xzf stern.tgz --strip-components=1)
+      - (cd ${TEMP}; tar -xzf stern.tgz)
       - cp ${TEMP}/stern /usr/local/bin/stern
       - chmod a+x /usr/local/bin/stern
       - stern --completion=bash >/etc/bash_completion.d/stern
