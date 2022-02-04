@@ -47,6 +47,7 @@ var MyApps *cliv2.App = &cliv2.App{
 			Usage:           "Installs the application(s)",
 			Before:          allChecks,
 			Action:          install,
+			BashComplete:    installCompletion,
 			HideHelpCommand: true,
 		},
 		{
@@ -56,6 +57,7 @@ var MyApps *cliv2.App = &cliv2.App{
 			Action:          update,
 			Flags:           updateFlags,
 			HideHelpCommand: true,
+			BashComplete:    updateCompletion,
 		},
 		{
 			Name:            "uninstall",
@@ -63,6 +65,7 @@ var MyApps *cliv2.App = &cliv2.App{
 			Before:          allChecks,
 			Action:          uninstall,
 			Flags:           uninstallFlags,
+			BashComplete:    uninstallCompletion,
 			HideHelpCommand: true,
 		},
 		{
@@ -90,6 +93,7 @@ var MyApps *cliv2.App = &cliv2.App{
 					Usage:           "Shows the contents of the repository",
 					Before:          basicChecks,
 					Action:          showRepo,
+					BashComplete:    singleRepositoryCompletion,
 					HideHelpCommand: true,
 				},
 				{
@@ -98,6 +102,7 @@ var MyApps *cliv2.App = &cliv2.App{
 					Usage:           "Removes the repository",
 					Before:          allChecks,
 					Action:          removeRepos,
+					BashComplete:    multipleRepositoriesCompletion,
 					HideHelpCommand: true,
 				},
 				{
@@ -105,6 +110,7 @@ var MyApps *cliv2.App = &cliv2.App{
 					Usage:           "Gets/sets the default repository",
 					Before:          basicChecks,
 					Action:          defaultRepo,
+					BashComplete:    singleRepositoryCompletion,
 					HideHelpCommand: true,
 				},
 			},

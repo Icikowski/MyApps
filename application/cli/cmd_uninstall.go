@@ -12,6 +12,12 @@ import (
 
 var uninstallFlags = []cliv2.Flag{}
 
+func uninstallCompletion(ctx *cliv2.Context) {
+	for _, deployment := range config.GetDeployments() {
+		fmt.Println(deployment.String())
+	}
+}
+
 func uninstall(ctx *cliv2.Context) error {
 	args := ctx.Args()
 	if !args.Present() {

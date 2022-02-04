@@ -19,6 +19,15 @@ var updateFlags = []cliv2.Flag{
 	},
 }
 
+func updateCompletion(ctx *cliv2.Context) {
+	if ctx.IsSet("all") {
+		return
+	}
+	for _, deployment := range config.GetDeployments() {
+		fmt.Println(deployment.String())
+	}
+}
+
 func update(ctx *cliv2.Context) error {
 	repos := config.GetRepositories()
 	deployments := config.GetDeployments()

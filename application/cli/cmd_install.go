@@ -12,6 +12,20 @@ import (
 	"icikowski.pl/myapps/types"
 )
 
+func installCompletion(ctx *cliv2.Context) {
+	repos := config.GetRepositories()
+	deployments := config.GetDeployments()
+
+	for _, repo := range repos {
+		for _, app := range repo.Contents {
+			if deployments.Exists(repo.Name, app.Name) {
+				continue
+			}
+			fmt.Printf("%s/%s\n", repo.Name, app.Name)
+		}
+	}
+}
+
 func install(ctx *cliv2.Context) error {
 	args := ctx.Args()
 	if !args.Present() {
