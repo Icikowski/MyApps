@@ -93,7 +93,7 @@ var MyApps *cliv2.App = &cliv2.App{
 					Usage:           "Shows the contents of the repository",
 					Before:          basicChecks,
 					Action:          showRepo,
-					BashComplete:    singleRepositoryCompletion,
+					BashComplete:    repositoryNameCompletion,
 					HideHelpCommand: true,
 				},
 				{
@@ -102,7 +102,7 @@ var MyApps *cliv2.App = &cliv2.App{
 					Usage:           "Removes the repository",
 					Before:          allChecks,
 					Action:          removeRepos,
-					BashComplete:    multipleRepositoriesCompletion,
+					BashComplete:    repositoryNameCompletion,
 					HideHelpCommand: true,
 				},
 				{
@@ -110,7 +110,7 @@ var MyApps *cliv2.App = &cliv2.App{
 					Usage:           "Gets/sets the default repository",
 					Before:          basicChecks,
 					Action:          defaultRepo,
-					BashComplete:    singleRepositoryCompletion,
+					BashComplete:    repositoryNameCompletion,
 					HideHelpCommand: true,
 				},
 			},

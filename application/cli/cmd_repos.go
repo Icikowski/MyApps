@@ -22,17 +22,10 @@ var addReposFlags = []cliv2.Flag{
 	},
 }
 
-func multipleRepositoriesCompletion(ctx *cliv2.Context) {
+func repositoryNameCompletion(ctx *cliv2.Context) {
 	for _, repo := range config.GetRepositories() {
 		fmt.Println(repo.Name)
 	}
-}
-
-func singleRepositoryCompletion(ctx *cliv2.Context) {
-	if ctx.NArg() != 0 {
-		return
-	}
-	multipleRepositoriesCompletion(ctx)
 }
 
 func addRepos(ctx *cliv2.Context) error {
