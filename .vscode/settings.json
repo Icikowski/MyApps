@@ -10,5 +10,8 @@
         "analyses": {
             "printf": false
         }
+    },
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/Icikowski/MyApps/master/repository.schema.json": "repositories/**"
     }
 }
