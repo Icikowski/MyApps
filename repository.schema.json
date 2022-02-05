@@ -1,0 +1,176 @@
+{
+    "$id": "https://raw.githubusercontent.com/Icikowski/MyApps/master/repository.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "description": "Definition of the MyApps' repository",
+    "required": [
+        "name",
+        "description",
+        "maintainer",
+        "contents"
+    ],
+    "title": "Repository definition",
+    "type": "object",
+    "additionalProperties": true,
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "description": "Short name of the repository",
+            "title": "Repository name",
+            "type": "string"
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "description": "Short repository description",
+            "title": "Repository description",
+            "type": "string"
+        },
+        "maintainer": {
+            "$id": "#/properties/maintainer",
+            "description": "Maintainer's name and optional info",
+            "examples": [
+                "Jane Doe",
+                "Jane Doe <jane.doe@example.com>"
+            ],
+            "title": "Maintainer name",
+            "type": "string"
+        },
+        "contents": {
+            "$id": "#/properties/contents",
+            "description": "List of apps available in repository",
+            "title": "Repository contents",
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/contents/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/contents/items/anyOf/0",
+                        "description": "Application details and related scenarios",
+                        "required": [
+                            "name",
+                            "description",
+                            "newest_version_check",
+                            "current_version_check",
+                            "install_scenario",
+                            "update_scenario",
+                            "uninstall_scenario"
+                        ],
+                        "title": "Application definition",
+                        "type": "object",
+						"additionalProperties": true,
+                        "properties": {
+                            "name": {
+                                "$id": "#/properties/contents/items/anyOf/0/properties/name",
+                                "description": "Short application name",
+                                "title": "Application name",
+                                "type": "string"
+                            },
+                            "description": {
+                                "$id": "#/properties/contents/items/anyOf/0/properties/description",
+                                "description": "Few words about application and its purpose",
+                                "title": "Application description",
+                                "type": "string"
+                            },
+                            "newest_version_check": {
+                                "$id": "#/properties/contents/items/anyOf/0/properties/newest_version_check",
+                                "description": "List of command that will produce latest application's version as standard output",
+                                "title": "Newest version check scenario",
+                                "type": "array",
+                                "additionalItems": true,
+								"minItems": 1,
+                                "items": {
+                                    "$id": "#/properties/contents/items/anyOf/0/properties/newest_version_check/items",
+                                    "anyOf": [
+                                        {
+                                            "$id": "#/properties/contents/items/anyOf/0/properties/newest_version_check/items/anyOf/0",
+                                            "description": "Shell commands, pipes, etc.",
+                                            "title": "Shell command(s)",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "current_version_check": {
+                                "$id": "#/properties/contents/items/anyOf/0/properties/current_version_check",
+                                "default": [],
+                                "description": "List of command that will produce current application's version as standard output",
+                                "title": "Current version check scenario",
+                                "type": "array",
+                                "additionalItems": true,
+                                "minItems": 1,
+                                "items": {
+                                    "$id": "#/properties/contents/items/anyOf/0/properties/current_version_check/items",
+                                    "anyOf": [
+                                        {
+                                            "$id": "#/properties/contents/items/anyOf/0/properties/current_version_check/items/anyOf/0",
+                                            "description": "Shell commands, pipes, etc.",
+                                            "title": "Shell command(s)",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "install_scenario": {
+                                "$id": "#/properties/contents/items/anyOf/0/properties/install_scenario",
+                                "type": "array",
+                                "title": "Install scenario",
+                                "description": "Steps (commands) used to install application; 'OS', 'ARCH', 'TEMP' & 'LATEST_VERSION' environment variables are available",
+                                "additionalItems": true,
+								"minItems": 1,
+                                "items": {
+                                    "$id": "#/properties/contents/items/anyOf/0/properties/install_scenario/items",
+                                    "anyOf": [
+                                        {
+                                            "$id": "#/properties/contents/items/anyOf/0/properties/install_scenario/items/anyOf/0",
+                                            "description": "Shell commands, pipes, etc.",
+                                            "title": "Shell command(s)",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "update_scenario": {
+                                "$id": "#/properties/contents/items/anyOf/0/properties/update_scenario",
+                                "type": "array",
+                                "title": "Update scenario",
+                                "description": "Steps (commands) used to update application; 'OS', 'ARCH', 'TEMP', 'CURRENT_VERSION' & 'LATEST_VERSION' environment variables are available",
+                                "additionalItems": true,
+								"minItems": 1,
+                                "items": {
+                                    "$id": "#/properties/contents/items/anyOf/0/properties/update_scenario/items",
+                                    "anyOf": [
+                                        {
+                                            "$id": "#/properties/contents/items/anyOf/0/properties/update_scenario/items/anyOf/0",
+                                            "description": "Shell commands, pipes, etc.",
+                                            "title": "Shell command(s)",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "uninstall_scenario": {
+                                "$id": "#/properties/contents/items/anyOf/0/properties/uninstall_scenario",
+                                "type": "array",
+                                "title": "The uninstall_scenario schema",
+                                "description": "Steps (commands) used to uninstall application; 'OS', 'ARCH' & 'CURRENT_VERSION' environment variables are available",
+                                "additionalItems": true,
+								"minItems": 1,
+                                "items": {
+                                    "$id": "#/properties/contents/items/anyOf/0/properties/uninstall_scenario/items",
+                                    "anyOf": [
+                                        {
+                                            "$id": "#/properties/contents/items/anyOf/0/properties/uninstall_scenario/items/anyOf/0",
+                                            "description": "Shell commands, pipes, etc.",
+                                            "title": "Shell command(s)",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
