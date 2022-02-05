@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/hashicorp/go-version"
@@ -102,6 +103,8 @@ func (app Application) Install() error {
 		os.Environ(),
 		"LATEST_VERSION="+latestVersion.String(),
 		"TEMP="+tmpDir,
+		"OS="+runtime.GOOS,
+		"ARCH="+runtime.GOARCH,
 	)
 
 	for i, step := range app.InstallScenario {
@@ -144,6 +147,8 @@ func (app Application) Update() error {
 		"CURRENT_VERSION="+currentVersion.String(),
 		"LATEST_VERSION="+latestVersion.String(),
 		"TEMP="+tmpDir,
+		"OS="+runtime.GOOS,
+		"ARCH="+runtime.GOARCH,
 	)
 
 	for i, step := range app.UpdateScenario {
@@ -171,6 +176,8 @@ func (app Application) Uninstall() error {
 	commandEnvironment := append(
 		os.Environ(),
 		"CURRENT_VERSION="+currentVersion.String(),
+		"OS="+runtime.GOOS,
+		"ARCH="+runtime.GOARCH,
 	)
 
 	for i, step := range app.UninstallScenario {
