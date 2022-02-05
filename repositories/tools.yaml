@@ -72,7 +72,7 @@ contents:
     current_version_check:
       - yq --version | sed "s/.*version \([0-9.]*\).*/\1/"
     install_scenario:
-      - wget -q -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_linux_amd64.tar.gz"
+      - wget -q -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_${OS}_${ARCH}.tar.gz"
       - (cd ${TEMP}; tar -xzf yq.tgz)
       - cp ${TEMP}/yq_linux_amd64 /usr/local/bin/yq
       - chmod a+x /usr/local/bin/yq
@@ -81,7 +81,7 @@ contents:
     update_scenario:
       - rm -rf /usr/local/bin/yq
       - rm -rf /usr/local/share/man/man1/yq.1
-      - wget -q -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_linux_amd64.tar.gz"
+      - wget -q -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_${OS}_${ARCH}.tar.gz"
       - (cd ${TEMP}; tar -xzf yq.tgz)
       - cp ${TEMP}/yq_linux_amd64 /usr/local/bin/yq
       - chmod a+x /usr/local/bin/yq

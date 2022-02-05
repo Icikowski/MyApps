@@ -9,12 +9,12 @@ contents:
     current_version_check:
       - gpts --service-port -1 | head -n 1 | jq -r ".version"
     install_scenario: 
-      - wget -q -O ${TEMP}/gpts "https://github.com/Icikowski/GPTS/releases/download/v${LATEST_VERSION}/gpts-${LATEST_VERSION}-linux-amd64"
+      - wget -q -O ${TEMP}/gpts "https://github.com/Icikowski/GPTS/releases/download/v${LATEST_VERSION}/gpts-${LATEST_VERSION}-${OS}-${ARCH}"
       - mv ${TEMP}/gpts /usr/local/bin/gpts
       - chmod a+x /usr/local/bin/gpts
     update_scenario:
       - rm -f /usr/local/bin/gpts
-      - wget -q -O ${TEMP}/gpts "https://github.com/Icikowski/GPTS/releases/download/v${LATEST_VERSION}/gpts-${LATEST_VERSION}-linux-amd64"
+      - wget -q -O ${TEMP}/gpts "https://github.com/Icikowski/GPTS/releases/download/v${LATEST_VERSION}/gpts-${LATEST_VERSION}-${OS}-${ARCH}"
       - mv ${TEMP}/gpts /usr/local/bin/gpts
       - chmod a+x /usr/local/bin/gpts
     uninstall_scenario:
@@ -26,12 +26,12 @@ contents:
     current_version_check:
       - traffic-generator -version | jq ".version" -r
     install_scenario:
-      - wget -q -O ${TEMP}/traffic-generator "https://github.com/Icikowski/Traffic-Generator/releases/download/v${LATEST_VERSION}/traffic-generator-linux-amd64"
+      - wget -q -O ${TEMP}/traffic-generator "https://github.com/Icikowski/Traffic-Generator/releases/download/v${LATEST_VERSION}/traffic-generator-${OS}-${ARCH}"
       - mv ${TEMP}/traffic-generator /usr/local/bin/traffic-generator
       - chmod a+x /usr/local/bin/traffic-generator
     update_scenario:
       - rm -rf /usr/local/bin/traffic-generator
-      - wget -q -O ${TEMP}/traffic-generator "https://github.com/Icikowski/Traffic-Generator/releases/download/v${LATEST_VERSION}/traffic-generator-linux-amd64"
+      - wget -q -O ${TEMP}/traffic-generator "https://github.com/Icikowski/Traffic-Generator/releases/download/v${LATEST_VERSION}/traffic-generator-${OS}-${ARCH}"
       - mv ${TEMP}/traffic-generator /usr/local/bin/traffic-generator
       - chmod a+x /usr/local/bin/traffic-generator
     uninstall_scenario:

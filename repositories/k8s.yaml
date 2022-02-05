@@ -9,7 +9,7 @@ contents:
     current_version_check:
       - helm version --short | awk -F'+' '{ print $1 }' | sed 's/v//'
     install_scenario:
-      - wget -q -O ${TEMP}/helm.tgz "https://get.helm.sh/helm-v${LATEST_VERSION}-linux-amd64.tar.gz"
+      - wget -q -O ${TEMP}/helm.tgz "https://get.helm.sh/helm-v${LATEST_VERSION}-${OS}-${ARCH}.tar.gz"
       - (cd ${TEMP}; tar -xzf helm.tgz --strip-components=1)
       - cp ${TEMP}/helm /usr/local/bin/helm
       - chmod a+x /usr/local/bin/helm
@@ -18,7 +18,7 @@ contents:
     update_scenario:
       - rm -rf /usr/local/bin/helm
       - rm -rf /etc/bash_completion.d/helm
-      - wget -q -O ${TEMP}/helm.tgz "https://get.helm.sh/helm-v${LATEST_VERSION}-linux-amd64.tar.gz"
+      - wget -q -O ${TEMP}/helm.tgz "https://get.helm.sh/helm-v${LATEST_VERSION}-${OS}-${ARCH}.tar.gz"
       - (cd ${TEMP}; tar -xzf helm.tgz --strip-components=1)
       - cp ${TEMP}/helm /usr/local/bin/helm
       - chmod a+x /usr/local/bin/helm
@@ -34,7 +34,7 @@ contents:
     current_version_check:
       - "stern -v | head -n 1 | sed 's/version: //'"
     install_scenario:
-      - wget -q -O ${TEMP}/stern.tgz "https://github.com/stern/stern/releases/download/v${LATEST_VERSION}/stern_${LATEST_VERSION}_linux_amd64.tar.gz"
+      - wget -q -O ${TEMP}/stern.tgz "https://github.com/stern/stern/releases/download/v${LATEST_VERSION}/stern_${LATEST_VERSION}_${OS}_${ARCH}.tar.gz"
       - (cd ${TEMP}; tar -xzf stern.tgz)
       - cp ${TEMP}/stern /usr/local/bin/stern
       - chmod a+x /usr/local/bin/stern
@@ -43,7 +43,7 @@ contents:
     update_scenario:
       - rm -rf /usr/local/bin/stern
       - rm -rf /etc/bash_completion.d/stern
-      - wget -q -O ${TEMP}/stern.tgz "https://github.com/stern/stern/releases/download/v${LATEST_VERSION}/stern_${LATEST_VERSION}_linux_amd64.tar.gz"
+      - wget -q -O ${TEMP}/stern.tgz "https://github.com/stern/stern/releases/download/v${LATEST_VERSION}/stern_${LATEST_VERSION}_${OS}_${ARCH}.tar.gz"
       - (cd ${TEMP}; tar -xzf stern.tgz --strip-components=1)
       - cp ${TEMP}/stern /usr/local/bin/stern
       - chmod a+x /usr/local/bin/stern
