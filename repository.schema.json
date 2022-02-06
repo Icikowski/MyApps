@@ -8,7 +8,7 @@
         "maintainer",
         "contents"
     ],
-    "title": "Repository definition",
+    "title": "MyApps' repository definition",
     "type": "object",
     "additionalProperties": true,
     "properties": {
