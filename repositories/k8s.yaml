@@ -52,3 +52,26 @@ contents:
     uninstall_scenario:
       - rm -rf /usr/local/bin/stern
       - rm -rf /etc/bash_completion.d/stern
+  - name: kubebuilder
+    description: SDK for building Kubernetes APIs using CRDs
+    newest_version_check:
+      - curl -Ls -o /dev/null -X HEAD "https://github.com/kubernetes-sigs/kubebuilder/releases/latest" -w %{url_effective} | sed 's#.*/##; s/v//'
+    current_version_check:
+      - kubebuilder version | sed 's/.*KubeBuilderVersion:"\([0-9\.]*\)".*/\1/'
+    install_scenario:
+      - wget -q -O ${TEMP}/kubebuilder "https://github.com/kubernetes-sigs/kubebuilder/releases/download/v${LATEST_VERSION}/kubebuilder_linux_amd64"
+      - cp ${TEMP}/kubebuilder /usr/local/bin/kubebuilder
+      - chmod a+x /usr/local/bin/kubebuilder
+      - kubebuilder completion bash >/etc/bash_completion.d/kubebuilder
+      - chmod a+x /etc/bash_completion.d/kubebuilder
+    update_scenario:
+      - rm -rf /usr/local/bin/kubebuilder
+      - rm -rf /etc/bash_completion.d/kubebuilder
+      - wget -q -O ${TEMP}/kubebuilder "https://github.com/kubernetes-sigs/kubebuilder/releases/download/v${LATEST_VERSION}/kubebuilder_linux_amd64"
+      - cp ${TEMP}/kubebuilder /usr/local/bin/kubebuilder
+      - chmod a+x /usr/local/bin/kubebuilder
+      - kubebuilder completion bash >/etc/bash_completion.d/kubebuilder
+      - chmod a+x /etc/bash_completion.d/kubebuilder
+    uninstall_scenario:
+      - rm -rf /usr/local/bin/kubebuilder
+      - rm -rf /etc/bash_completion.d/kubebuilder

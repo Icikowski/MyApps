@@ -34,13 +34,13 @@ contents:
     current_version_check:
       - hexyl --version | sed 's/hexyl //'
     install_scenario:
-      - wget -q -O ${TEMP}/hexyl.tgz "https://github.com/sharkdp/hexyl/releases/download/v${LATEST_VERSION}/hexyl-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+      - wget -qL -O ${TEMP}/hexyl.tgz "https://github.com/sharkdp/hexyl/releases/download/v${LATEST_VERSION}/hexyl-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
       - (cd ${TEMP}; tar -xzf hexyl.tgz --strip-components=1)
       - cp ${TEMP}/hexyl /usr/local/bin/hexyl
       - chmod a+x /usr/local/bin/hexyl
     update_scenario:
       - rm -rf /usr/local/bin/hexyl
-      - wget -q -O ${TEMP}/hexyl.tgz "https://github.com/sharkdp/hexyl/releases/download/v${LATEST_VERSION}/hexyl-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+      - wget -qL -O ${TEMP}/hexyl.tgz "https://github.com/sharkdp/hexyl/releases/download/v${LATEST_VERSION}/hexyl-v${LATEST_VERSION}-x86_64-unknown-linux-musl.tar.gz"
       - (cd ${TEMP}; tar -xzf hexyl.tgz --strip-components=1)
       - cp ${TEMP}/hexyl /usr/local/bin/hexyl
       - chmod a+x /usr/local/bin/hexyl
@@ -53,13 +53,13 @@ contents:
     current_version_check:
       - lazygit --version | sed "s/.*version=\([0-9.]*\).*/\1/"
     install_scenario:
-      - wget -q -O ${TEMP}/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
+      - wget -qL -O ${TEMP}/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION%.0}/lazygit_${LATEST_VERSION%.0}_Linux_x86_64.tar.gz"
       - (cd ${TEMP}; tar -xzf lazygit.tgz)
       - cp ${TEMP}/lazygit /usr/local/bin/lazygit
       - chmod a+x /usr/local/bin/lazygit
     update_scenario:
       - rm -rf /usr/local/bin/lazygit
-      - wget -q -O ${TEMP}/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION}/lazygit_${LATEST_VERSION}_Linux_x86_64.tar.gz"
+      - wget -qL -O ${TEMP}/lazygit.tgz "https://github.com/jesseduffield/lazygit/releases/download/v${LATEST_VERSION%.0}/lazygit_${LATEST_VERSION%.0}_Linux_x86_64.tar.gz"
       - (cd ${TEMP}; tar -xzf lazygit.tgz)
       - cp ${TEMP}/lazygit /usr/local/bin/lazygit
       - chmod a+x /usr/local/bin/lazygit
@@ -72,12 +72,12 @@ contents:
     current_version_check:
       - yq --version | sed "s/.*version \([0-9.]*\).*/\1/"
     install_scenario:
-      - wget -q -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_${OS}_${ARCH}.tar.gz"
+      - wget -qL -O ${TEMP}/yq.tgz "https://github.com/mikefarah/yq/releases/download/v${LATEST_VERSION}/yq_${OS}_${ARCH}.tar.gz"
       - (cd ${TEMP}; tar -xzf yq.tgz)
       - cp ${TEMP}/yq_linux_amd64 /usr/local/bin/yq
       - chmod a+x /usr/local/bin/yq
-      - cp ${TEMP}/yq.1 /usr/local/share/man/man1/yq.1
-      - chmod 0644 /usr/local/share/man/man1/yq.1
+      - yq shell-completion bash >/etc/bash_completion.d/yq
+      - chmod a+x /etc/bash_completion.d/yq
     update_scenario:
       - rm -rf /usr/local/bin/yq
       - rm -rf /usr/local/share/man/man1/yq.1
@@ -85,8 +85,8 @@ contents:
       - (cd ${TEMP}; tar -xzf yq.tgz)
       - cp ${TEMP}/yq_linux_amd64 /usr/local/bin/yq
       - chmod a+x /usr/local/bin/yq
-      - cp ${TEMP}/yq.1 /usr/local/share/man/man1/yq.1
-      - chmod 0644 /usr/local/share/man/man1/yq.1
+      - yq shell-completion bash >/etc/bash_completion.d/yq
+      - chmod a+x /etc/bash_completion.d/yq
     uninstall_scenario:
       - rm -rf /usr/local/bin/yq
       - rm -rf /usr/local/share/man/man1/yq.1
