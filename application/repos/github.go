@@ -47,7 +47,10 @@ func (l *GitHubRepositoryLoader) LoadRepository(source string) (types.Repository
 			req.Header.Set("Accept", "application/vnd.github.v3+json")
 
 			resp, err := http.DefaultClient.Do(req)
-			if err != nil {
+			if err != nil || resp.StatusCode != http.StatusOK {
+				if err == nil {
+					err = fmt.Errorf("got status code %d", resp.StatusCode)
+				}
 				common.PrintErrorWhileMsg("detecting default branch of", fmt.Sprintf("%s/%s", user, repo), err)
 				return repository, false
 			}
@@ -73,7 +76,10 @@ func (l *GitHubRepositoryLoader) LoadRepository(source string) (types.Repository
 	req, _ := http.NewRequest(http.MethodGet, url, nil)
 
 	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
+	if err != nil || resp.StatusCode != http.StatusOK {
+		if err == nil {
+			err = fmt.Errorf("got status code %d", resp.StatusCode)
+		}
 		common.PrintErrorWhileMsg("loading source", source, err)
 		return repository, false
 	}
