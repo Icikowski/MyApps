@@ -24,6 +24,11 @@ func (l *GitHubRepositoryLoader) LoadRepository(source string) (types.Repository
 	re := regexp.MustCompile(`^(?P<user>[^/]+)/(?P<repo>[^@/]+)(@(?P<branch>[^/]+))?/(?P<filename>.+)$`)
 	matches := re.FindStringSubmatch(source)
 
+	if len(matches) == 0 {
+		common.PrintErrorWhileMsg("parsing source", source, fmt.Errorf("invalid format"))
+		return repository, false
+	}
+
 	user := matches[re.SubexpIndex("user")]
 	repo := matches[re.SubexpIndex("repo")]
 	branch := matches[re.SubexpIndex("branch")]
@@ -53,6 +58,11 @@ func (l *GitHubRepositoryLoader) LoadRepository(source string) (types.Repository
 				return repository, false
 			}
 
+			default_branch := out["default_branch"]
+			if default_branch == nil {
+				common.PrintErrorWhileMsg("detecting default branch of", fmt.Sprintf("%s/%s", user, repo), fmt.Errorf("repository (probably) does not exist"))
+				return repository, false
+			}
 			branch = out["default_branch"].(string)
 		} else {
 			branch = l.config.DefaultBranchName
