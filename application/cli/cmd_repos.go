@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"icikowski.pl/myapps/common"
 	"icikowski.pl/myapps/config"
-	"icikowski.pl/myapps/types"
+	"icikowski.pl/myapps/repos"
 )
 
 var addReposFlags = []cliv2.Flag{
@@ -31,23 +31,17 @@ func repositoryNameCompletion(ctx *cliv2.Context) {
 func addRepos(ctx *cliv2.Context) error {
 	args := ctx.Args()
 	if !args.Present() {
-		return common.ExitWithErrMsg("at least one input file must be specified")
+		return common.ExitWithErrMsg("at least one source must be specified")
 	}
 
-	fmt.Println("Processing", color.New(color.FgHiWhite, color.Bold).Sprint(args.Len()), "file(s)...")
+	processor := repos.NewRepositoryProcessor()
+
+	fmt.Println("Processing", color.New(color.FgHiWhite, color.Bold).Sprint(args.Len()), "source(s)...")
 
 	errOcurred := false
-	for _, filename := range args.Slice() {
-		contents, err := ioutil.ReadFile(filename)
-		if err != nil {
-			common.PrintErrorWhileMsg("reading file", filename, err)
-			errOcurred = true
-			continue
-		}
-
-		var repo types.Repository
-		if err := yaml.Unmarshal(contents, &repo); err != nil {
-			common.PrintErrorWhileMsg("parsing file", filename, err)
+	for _, source := range args.Slice() {
+		repo, ok := processor.Load(source)
+		if !ok {
 			errOcurred = true
 			continue
 		}
@@ -56,6 +50,13 @@ func addRepos(ctx *cliv2.Context) error {
 
 		if _, err := os.Stat(target); err == nil && !ctx.Bool("force") {
 			common.PrintErrorWhileMsg("adding repository", repo.Name, errors.New("repository already exists"))
+			errOcurred = true
+			continue
+		}
+
+		contents, err := yaml.Marshal(repo)
+		if err != nil {
+			common.PrintErrorWhileMsg("serializing repository", repo.Name, err)
 			errOcurred = true
 			continue
 		}

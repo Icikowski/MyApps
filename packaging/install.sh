@@ -23,7 +23,15 @@ fi
 echo " -> Creating files..."
 if [ ! -e /usr/share/myapps/config.yaml ]; then
   cat >/usr/share/myapps/config.yaml <<EOF
+# Name of default repository
 default_repo: default
+
+# GitHub repository loader configuration
+github_loader:
+  # Enable automatic detection of default repository branch
+  detect_default_branch: true
+  # If the automatic detection is disabled, use following branch name as default (when not explicitly specified)
+  default_branch_name: master
 EOF
 fi
 
@@ -88,7 +96,7 @@ chmod a+x /etc/bash_completion.d/myapps
 
 echo " -> DONE"
 echo ""
-echo "You can change the default repository by editing file:"
+echo "You can change the default repository and loaders config by editing file:"
 echo "  /usr/share/myapps/config.yaml"
 echo "Check for more pre-made repositories:"
 echo "  https://github.com/Icikowski/MyApps/tree/master/repositories"

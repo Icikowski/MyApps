@@ -25,7 +25,7 @@ Just run the `myapps` command and check usage information.
 
 ## Repositories
 
-Use subcommands of `myapps repos` to manage the repositories.
+Use subcommands of `myapps repo` to manage the repositories.
 
 <details>
 <summary><strong>Example repository structure</strong></summary>
@@ -61,3 +61,24 @@ contents: []
 # - TEMP - path to temporary directory that will be removed after scenario (in install & update scenarios)
 ```
 </details>
+
+The repository schema is available in `repository.schema.json` file.
+
+## Configuration
+
+Configuration file is located in `/usr/share/myapps/config.yaml` and can be edited by the user.
+
+<details>
+<summary><strong>Configuration file structure</strong></summary>
+
+```yaml
+# Name of default repository
+default_repo: default
+
+# GitHub repository loader configuration
+github_loader:
+  # Enable automatic detection of default repository branch
+  detect_default_branch: true
+  # If the automatic detection is disabled, use following branch name as default (when not explicitly specified)
+  default_branch_name: master
+```

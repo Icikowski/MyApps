@@ -11,6 +11,10 @@ import (
 
 var config = types.Configuration{
 	DefaultRepository: "default",
+	GitHubLoader: types.GitHubRepositoryLoaderConfig{
+		DetectDefaultBranch: true,
+		DefaultBranchName:   "master",
+	},
 }
 
 func init() {

@@ -32,7 +32,7 @@ var MyApps *cliv2.App = &cliv2.App{
 			Before:          basicChecks,
 			Action:          search,
 			Flags:           searchFlags,
-			HideHelpCommand: true,
+			HideHelpCommand: false,
 		},
 		{
 			Name:            "list",
@@ -69,12 +69,14 @@ var MyApps *cliv2.App = &cliv2.App{
 			HideHelpCommand: true,
 		},
 		{
-			Name:  "repos",
-			Usage: "Manages the application repositories",
+			Name:    "repo",
+			Aliases: []string{"repos"},
+			Usage:   "Manages the application repositories",
 			Subcommands: []*cliv2.Command{
 				{
 					Name:            "add",
-					Usage:           "Adds new repository from file",
+					Usage:           "Adds new repository from source",
+					Description:     "Adds new repository from source\n\nSource is determined by the prefix:\n  'file:'    repository loaded from file\n             e.g.: file:/tmp/some-repo.yaml\n  'github:'  repository loaded from GitHub contents\n             format: <user>/<repository>[@<branch>]/file\n             e.g.: github:Icikowski/MyApps/repositories/tools.yaml\n\nIf no prefix is specified, then the file loades is being used",
 					Before:          allChecks,
 					Action:          addRepos,
 					Flags:           addReposFlags,

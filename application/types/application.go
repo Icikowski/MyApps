@@ -92,7 +92,7 @@ func (app Application) Install() error {
 	}
 
 	bar.Increment()
-	tmpDir, cleanup, err := GetTempDir()
+	tmpDir, cleanup, err := common.GetTempDir()
 	if err != nil {
 		return err
 	}
@@ -135,7 +135,7 @@ func (app Application) Update() error {
 	}
 
 	bar.Increment()
-	tmpDir, cleanup, err := GetTempDir()
+	tmpDir, cleanup, err := common.GetTempDir()
 	if err != nil {
 		return err
 	}
