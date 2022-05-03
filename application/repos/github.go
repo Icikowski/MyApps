@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"regexp"
 
-	"gopkg.in/yaml.v3"
 	"icikowski.pl/myapps/common"
 	"icikowski.pl/myapps/types"
 )
@@ -14,6 +13,7 @@ import (
 // GitHubRepositoryLoader loads applications repository from GitHub repository
 type GitHubRepositoryLoader struct {
 	config types.GitHubRepositoryLoaderConfig
+	target *WebRepositoryLoader
 }
 
 // LoadRepository implements RepositoryLoader
@@ -73,23 +73,7 @@ func (l *GitHubRepositoryLoader) LoadRepository(source string) (types.Repository
 	}
 
 	url := fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/%s/%s", user, repo, branch, filename)
-	req, _ := http.NewRequest(http.MethodGet, url, nil)
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK {
-		if err == nil {
-			err = fmt.Errorf("got status code %d", resp.StatusCode)
-		}
-		common.PrintErrorWhileMsg("loading source", source, err)
-		return repository, false
-	}
-
-	if err := yaml.NewDecoder(resp.Body).Decode(&repository); err != nil {
-		common.PrintErrorWhileMsg("parsing source", source, err)
-		return repository, false
-	}
-
-	return repository, true
+	return l.target.LoadRepository(url)
 }
 
 var _ RepositoryLoader = &GitHubRepositoryLoader{}

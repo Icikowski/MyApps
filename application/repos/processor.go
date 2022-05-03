@@ -48,6 +48,7 @@ func NewRepositoryProcessor() *RepositoryProcessor {
 		"https": httpsWebRepositoryIntermediateLoader,
 		"github": &GitHubRepositoryLoader{
 			config: config.GetConfiguration().GitHubLoader,
+			target: webRepositoryLoader,
 		},
 	}
 
