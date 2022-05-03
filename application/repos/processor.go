@@ -31,11 +31,24 @@ func (p *RepositoryProcessor) Load(prefixedSource string) (types.Repository, boo
 
 // NewRepositoryProcessor creates a new repository processor
 func NewRepositoryProcessor() *RepositoryProcessor {
+	webRepositoryLoader := &WebRepositoryLoader{}
+	httpWebRepositoryIntermediateLoader := &WebRepositoryIntermediateLoader{
+		prefix: "http",
+		target: webRepositoryLoader,
+	}
+	httpsWebRepositoryIntermediateLoader := &WebRepositoryIntermediateLoader{
+		prefix: "https",
+		target: webRepositoryLoader,
+	}
+
 	loaders := map[string]RepositoryLoader{
+		"file":  &FileRepositoryLoader{},
+		"web":   webRepositoryLoader,
+		"http":  httpWebRepositoryIntermediateLoader,
+		"https": httpsWebRepositoryIntermediateLoader,
 		"github": &GitHubRepositoryLoader{
 			config: config.GetConfiguration().GitHubLoader,
 		},
-		"file": &FileRepositoryLoader{},
 	}
 
 	return &RepositoryProcessor{
