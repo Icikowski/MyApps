@@ -76,7 +76,7 @@ var MyApps *cliv2.App = &cliv2.App{
 				{
 					Name:            "add",
 					Usage:           "Adds new repository from source",
-					Description:     "Adds new repository from source\n\nSource is determined by the prefix:\n  'file:'    repository loaded from file\n             e.g.: file:/tmp/some-repo.yaml\n  'github:'  repository loaded from GitHub contents\n             format: <user>/<repository>[@<branch>]/file\n             e.g.: github:Icikowski/MyApps/repositories/tools.yaml\n\nIf no prefix is specified, then the file loades is being used",
+					Description:     "Adds new repository from source\n\nSource is determined by the prefix:\n  'file:'    repository loaded from file\n             e.g.: file:/tmp/some-repo.yaml\n  'github:'  repository loaded from GitHub contents\n             format: <user>/<repository>[@<branch>]/file\n             e.g.: github:Icikowski/MyApps/repositories/tools.yaml\n  'web:'     repository loaded from URL\n             e.g.: web:https://example.com/repository.yaml\n\nIf no prefix is specified, then the file loades is being used.\nSources starting with 'http://' or 'https://' will be loaded using web loader.",
 					Before:          allChecks,
 					Action:          addRepos,
 					Flags:           addReposFlags,
