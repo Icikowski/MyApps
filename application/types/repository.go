@@ -3,10 +3,10 @@ package types
 import (
 	"fmt"
 
+	"git.sr.ht/~icikowski/myapps/common"
 	"github.com/fatih/color"
 	"github.com/hashicorp/go-version"
 	"github.com/rodaine/table"
-	"icikowski.pl/myapps/common"
 )
 
 // Repository represents the applications repository.

@@ -10,6 +10,10 @@
 
 [![asciicast](https://asciinema.org/a/451017.svg)](https://asciinema.org/a/451017)
 
+> **⚠️ Warning**
+>
+> This repository is hosted on _git.sr.ht_ and mirrored to GitHub.
+> You should always refer to _git.sr.ht_ version as the primary instance.
 
 ## Installation
 

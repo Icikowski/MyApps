@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"icikowski.pl/myapps/cli"
+	"git.sr.ht/~icikowski/myapps/cli"
 )
 
 func main() {

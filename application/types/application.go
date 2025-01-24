@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"strings"
 
+	"git.sr.ht/~icikowski/myapps/common"
 	"github.com/hashicorp/go-version"
-	"icikowski.pl/myapps/common"
 )
 
 // Application represents the definition of an external application.

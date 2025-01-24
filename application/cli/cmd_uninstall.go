@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"git.sr.ht/~icikowski/myapps/common"
+	"git.sr.ht/~icikowski/myapps/config"
 	"github.com/fatih/color"
 	cliv2 "github.com/urfave/cli/v2"
-	"icikowski.pl/myapps/common"
-	"icikowski.pl/myapps/config"
 )
 
 var uninstallFlags = []cliv2.Flag{}

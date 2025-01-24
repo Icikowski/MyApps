@@ -1,4 +1,4 @@
-module icikowski.pl/myapps
+module git.sr.ht/~icikowski/myapps
 
 go 1.19
 

@@ -20,7 +20,7 @@ var MyApps *cliv2.App = &cliv2.App{
 	Authors: []*cliv2.Author{
 		{
 			Name:  "Piotr Icikowski",
-			Email: "https://github.com/Icikowski",
+			Email: "https://icikowski.pl",
 		},
 	},
 	UseShortOptionHandling: true,

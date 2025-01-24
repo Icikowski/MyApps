@@ -3,9 +3,9 @@ package repos
 import (
 	"io/ioutil"
 
+	"git.sr.ht/~icikowski/myapps/common"
+	"git.sr.ht/~icikowski/myapps/types"
 	"gopkg.in/yaml.v3"
-	"icikowski.pl/myapps/common"
-	"icikowski.pl/myapps/types"
 )
 
 // FileRepositoryLoader loads applications repository from file

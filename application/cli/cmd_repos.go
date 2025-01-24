@@ -6,12 +6,12 @@ import (
 	"io/ioutil"
 	"os"
 
+	"git.sr.ht/~icikowski/myapps/common"
+	"git.sr.ht/~icikowski/myapps/config"
+	"git.sr.ht/~icikowski/myapps/repos"
 	"github.com/fatih/color"
 	cliv2 "github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v3"
-	"icikowski.pl/myapps/common"
-	"icikowski.pl/myapps/config"
-	"icikowski.pl/myapps/repos"
 )
 
 var addReposFlags = []cliv2.Flag{

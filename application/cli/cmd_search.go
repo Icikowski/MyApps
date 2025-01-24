@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"sync"
 
+	"git.sr.ht/~icikowski/myapps/common"
+	"git.sr.ht/~icikowski/myapps/config"
+	"git.sr.ht/~icikowski/myapps/types"
 	"github.com/rodaine/table"
 	cliv2 "github.com/urfave/cli/v2"
-	"icikowski.pl/myapps/common"
-	"icikowski.pl/myapps/config"
-	"icikowski.pl/myapps/types"
 )
 
 var searchFlags = []cliv2.Flag{

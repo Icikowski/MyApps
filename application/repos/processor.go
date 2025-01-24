@@ -3,8 +3,8 @@ package repos
 import (
 	"regexp"
 
-	"icikowski.pl/myapps/config"
-	"icikowski.pl/myapps/types"
+	"git.sr.ht/~icikowski/myapps/config"
+	"git.sr.ht/~icikowski/myapps/types"
 )
 
 // RepositoryProcessor manages the repository parsers for different sources

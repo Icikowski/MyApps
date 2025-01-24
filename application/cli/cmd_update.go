@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
+	"git.sr.ht/~icikowski/myapps/common"
+	"git.sr.ht/~icikowski/myapps/config"
 	cliv2 "github.com/urfave/cli/v2"
-	"icikowski.pl/myapps/common"
-	"icikowski.pl/myapps/config"
 )
 
 var updateFlags = []cliv2.Flag{

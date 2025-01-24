@@ -13,7 +13,7 @@ clean:
 
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
 GIT_TAG := $(shell echo $${CURRENT_TAG:-$$(git describe --abbrev=0 | sed "s/v//")})
-BASE_FLAGS := -X 'icikowski.pl/myapps/cli.version=${GIT_TAG}' -X 'icikowski.pl/myapps/cli.gitCommit=${GIT_COMMIT}'
+BASE_FLAGS := -X 'git.sr.ht/~icikowski/myapps/cli.version=${GIT_TAG}' -X 'git.sr.ht/~icikowski/myapps/cli.gitCommit=${GIT_COMMIT}'
 
 build: clean
 	(cd application; go build -ldflags "${BASE_FLAGS}" .)

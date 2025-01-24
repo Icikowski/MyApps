@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"git.sr.ht/~icikowski/myapps/common"
+	"git.sr.ht/~icikowski/myapps/types"
 	"gopkg.in/yaml.v3"
-	"icikowski.pl/myapps/common"
-	"icikowski.pl/myapps/types"
 )
 
 // WebRepositoryLoader loads applications repository from given URL

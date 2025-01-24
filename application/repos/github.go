@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"regexp"
 
-	"icikowski.pl/myapps/common"
-	"icikowski.pl/myapps/types"
+	"git.sr.ht/~icikowski/myapps/common"
+	"git.sr.ht/~icikowski/myapps/types"
 )
 
 // GitHubRepositoryLoader loads applications repository from GitHub repository

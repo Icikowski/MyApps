@@ -4,8 +4,8 @@ import (
 	"os/user"
 	"runtime"
 
+	"git.sr.ht/~icikowski/myapps/common"
 	cliv2 "github.com/urfave/cli/v2"
-	"icikowski.pl/myapps/common"
 )
 
 func basicChecks(ctx *cliv2.Context) error {
